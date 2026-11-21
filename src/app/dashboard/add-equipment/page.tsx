@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import axiosSecure from "@/lib/axiosSecure";
@@ -21,6 +21,7 @@ const CATEGORIES = [
 export default function AddEquipmentPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -63,6 +64,24 @@ export default function AddEquipmentPage() {
 
       if (res.data?.success) {
         toast.success("Equipment submitted! Status is Pending Admin approval.");
+
+        // Reset all form fields back to their initial empty/default state
+        setName("");
+        setDescription("");
+        setLocation("");
+        setRentalPrice("");
+        setBrand("");
+        setModel("");
+        setTerms("");
+        setImageFile(null);
+        setAvailableQuantity("1");
+        setCategory(CATEGORIES[0]);
+        setRentalType("Daily");
+        setCondition("Excellent");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
         router.push("/dashboard/my-equipment");
       }
     } catch (err: any) {
@@ -224,6 +243,7 @@ export default function AddEquipmentPage() {
               <Upload className="h-3.5 w-3.5 text-[#059669]" /> Equipment Image (ImgBB Upload) *
             </label>
             <input
+              ref={fileInputRef}
               type="file"
               required
               accept="image/*"

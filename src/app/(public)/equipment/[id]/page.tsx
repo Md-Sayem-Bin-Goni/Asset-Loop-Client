@@ -33,6 +33,7 @@ function EquipmentDetailsContent() {
   const [equipment, setEquipment] = useState<Equipment | null>(null);
   const [loading, setLoading] = useState(true);
   const [favLoading, setFavLoading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   // Booking Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -67,6 +68,32 @@ function EquipmentDetailsContent() {
     if (id) fetchDetails();
   }, [id]);
 
+  // Check on mount whether this equipment already exists in customer's favorites
+  useEffect(() => {
+    const checkFavorite = async () => {
+      if (!user || user.role !== "customer") return;
+      try {
+        const res = await axiosSecure.get("/favorites");
+        if (res.data?.success && Array.isArray(res.data.favorites)) {
+          const found = res.data.favorites.some(
+            (fav: any) =>
+              fav.equipmentId === id ||
+              fav.equipmentId?._id === id ||
+              fav.equipment?._id === id ||
+              fav._id === id
+          );
+          setIsFavorite(found);
+        }
+      } catch {
+        // Silently catch
+      }
+    };
+
+    if (id && user) {
+      checkFavorite();
+    }
+  }, [id, user]);
+
   // Automatic Total Rental Calculation based on dates, rentalType, and quantity
   const { durationUnits, totalAmount } = useMemo(() => {
     if (!equipment || !startDate || !endDate) {
@@ -99,9 +126,13 @@ function EquipmentDetailsContent() {
       setFavLoading(true);
       const res = await axiosSecure.post("/favorites", { equipmentId: equipment._id });
       if (res.data?.success) {
+        setIsFavorite(true);
         toast.success("Saved to your Favorites!");
       }
     } catch (err: any) {
+      if (err?.response?.data?.message === "Already added to favorites") {
+        setIsFavorite(true);
+      }
       toast.error(err?.response?.data?.message || "Could not add to favorites.");
     } finally {
       setFavLoading(false);
@@ -277,11 +308,23 @@ function EquipmentDetailsContent() {
 
             <button
               onClick={handleAddToFavorites}
-              disabled={favLoading}
-              className="py-3.5 px-5 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:border-[#059669] text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              disabled={favLoading || isFavorite}
+              className={`py-3.5 px-5 rounded-xl border text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
+                isFavorite
+                  ? "border-rose-200 bg-rose-50/60 dark:border-rose-900/50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+                  : "border-[var(--border)] bg-[var(--card)] hover:border-[#059669]"
+              }`}
             >
-              <Heart className="h-4 w-4 text-rose-500" />
-              {favLoading ? "Saving..." : "Add to Favorites"}
+              <Heart
+                className={`h-4 w-4 text-rose-500 ${
+                  isFavorite ? "fill-rose-500" : ""
+                }`}
+              />
+              {favLoading
+                ? "Saving..."
+                : isFavorite
+                ? "Saved in Favorites"
+                : "Add to Favorites"}
             </button>
           </div>
         </div>
@@ -420,13 +463,11 @@ function EquipmentDetailsContent() {
 export default function EquipmentDetailsPage() {
   return (
     <div className="min-h-screen flex flex-col">
-  
       <main className="flex-1">
         <PrivateRoute>
           <EquipmentDetailsContent />
         </PrivateRoute>
       </main>
-    
     </div>
   );
 }

@@ -71,35 +71,35 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
       : customerLinks;
 
   const SidebarContent = (
-    <div className="flex flex-col h-full bg-[#111827] dark:bg-[#030712] text-gray-200 border-r border-gray-800">
+    <div className="flex flex-col h-full bg-white/95 dark:bg-[#090D16] text-[#111827] dark:text-gray-200 border-r border-gray-200 dark:border-gray-800 transition-colors">
       {/* Brand Header */}
-      <div className="h-16 px-6 flex items-center justify-between border-b border-gray-800">
+      <div className="h-16 px-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-[#059669]">
             <Layers className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-white">
-            Asset<span className="text-[#10B981]">Loop</span>
+          <span className="text-xl font-bold text-[#111827] dark:text-white">
+            Asset<span className="text-[#059669] dark:text-[#10B981]">Loop</span>
           </span>
         </Link>
         <button
           onClick={() => setMobileOpen(false)}
-          className="lg:hidden p-1.5 rounded-lg text-gray-400 hover:text-white"
+          className="lg:hidden p-1.5 rounded-lg text-gray-500 hover:text-[#111827] dark:text-gray-400 dark:hover:text-white"
         >
           <X className="h-5 w-5" />
         </button>
       </div>
 
       {/* User Mini Profile Card */}
-      <div className="p-4 mx-3 mt-4 rounded-xl bg-gray-800/60 border border-gray-700/70 flex items-center gap-3">
+      <div className="p-4 mx-3 mt-4 rounded-xl bg-slate-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/70 flex items-center gap-3 shadow-xs">
         <img
           src={user?.image || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "User") + "&background=059669&color=fff"}
           alt={user?.name || "User"}
           className="h-10 w-10 rounded-full object-cover border border-[#10B981]"
         />
         <div className="overflow-hidden">
-          <p className="text-sm font-bold text-white truncate">{user?.name}</p>
-          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#059669]/20 text-[#10B981]">
+          <p className="text-sm font-bold text-[#111827] dark:text-white truncate">{user?.name}</p>
+          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981]">
             {user?.role}
           </span>
         </div>
@@ -117,8 +117,8 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
-                  ? "bg-[#059669] text-white shadow-md shadow-emerald-950/50"
-                  : "text-gray-400 hover:text-white hover:bg-gray-800/70"
+                  ? "bg-[#059669] text-white shadow-md shadow-emerald-950/20"
+                  : "text-gray-600 hover:text-[#111827] hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800/70"
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -129,18 +129,18 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-3 border-t border-gray-800 space-y-1.5">
+      <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-1.5">
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors cursor-pointer"
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         >
-          {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
+          {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-gray-700" />}
           {theme === "dark" ? "Light Mode" : "Dark Mode"}
         </button>
 
         <Link
           href="/"
-          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors"
         >
           <Home className="h-4 w-4" />
           Back to Home
@@ -148,7 +148,7 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
         >
           <LogOut className="h-4 w-4" />
           Logout
