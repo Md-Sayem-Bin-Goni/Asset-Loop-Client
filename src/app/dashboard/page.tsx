@@ -1,0 +1,230 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider";
+import axiosSecure from "@/lib/axiosSecure";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  AreaChart,
+  Area,
+} from "recharts";
+import {
+  Users,
+  Package,
+  Clock,
+  CalendarCheck,
+  CheckCircle2,
+  Banknote,
+  Heart,
+  ArrowRight,
+  Loader2,
+} from "lucide-react";
+
+export default function DashboardOverviewPage() {
+  const { user } = useAuth();
+  const [stats, setStats] = useState<any>(null);
+  const [customerCounts, setCustomerCounts] = useState({ rentals: 0, favorites: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      if (!user) return;
+      try {
+        setLoading(true);
+        if (user.role === "admin") {
+          const res = await axiosSecure.get("/analytics/admin");
+          if (res.data?.success) setStats(res.data.stats);
+        } else if (user.role === "owner") {
+          const res = await axiosSecure.get("/analytics/owner");
+          if (res.data?.success) setStats(res.data.stats);
+        } else {
+          const [rentalsRes, favRes] = await Promise.all([
+            axiosSecure.get("/bookings/customer"),
+            axiosSecure.get("/favorites"),
+          ]);
+          setCustomerCounts({
+            rentals: rentalsRes.data?.rentals?.length || 0,
+            favorites: favRes.data?.favorites?.length || 0,
+          });
+        }
+      } catch (error) {
+        console.error("Dashboard overview load error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboardData();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-[#059669] animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
+          {user?.role} Workspace
+        </span>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">
+          Welcome back, {user?.name}!
+        </h1>
+        <p className="text-sm text-[var(--muted-foreground)] mt-1">
+          Here is a live summary of your AssetLoop activity and performance.
+        </p>
+      </div>
+
+      {/* ADMIN ANALYTICS */}
+      {user?.role === "admin" && stats && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <StatCard title="Total Users" value={stats.totalUsers} icon={Users} />
+            <StatCard title="Total Equipment" value={stats.totalEquipment} icon={Package} />
+            <StatCard title="Pending Approvals" value={stats.pendingApprovals} icon={Clock} highlight />
+            <StatCard title="Total Bookings" value={stats.totalBookings} icon={CalendarCheck} />
+            <StatCard title="Completed Rentals" value={stats.completedRentals} icon={CheckCircle2} />
+            <StatCard
+              title="Total Platform Revenue"
+              value={`৳${Number(stats.totalRevenue || 0).toLocaleString()}`}
+              icon={Banknote}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-xs">
+              <h3 className="font-bold text-base mb-4">Monthly Revenue (৳)</h3>
+              <div className="h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats.monthlyStats}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                    <XAxis dataKey="month" fontSize={12} />
+                    <YAxis fontSize={12} />
+                    <Tooltip />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#059669"
+                      fill="#10B981"
+                      fillOpacity={0.2}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-xs">
+              <h3 className="font-bold text-base mb-4">Monthly Bookings Count</h3>
+              <div className="h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats.monthlyStats}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                    <XAxis dataKey="month" fontSize={12} />
+                    <YAxis fontSize={12} />
+                    <Tooltip />
+                    <Bar dataKey="bookings" fill="#059669" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* OWNER ANALYTICS */}
+      {user?.role === "owner" && stats && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <StatCard title="Listed Equipment" value={stats.totalListedEquipment} icon={Package} />
+            <StatCard title="Completed Rentals" value={stats.completedRentals} icon={CheckCircle2} />
+            <StatCard
+              title="Total Earnings"
+              value={`৳${Number(stats.totalEarnings || 0).toLocaleString()}`}
+              icon={Banknote}
+            />
+          </div>
+
+          <div className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-xs">
+            <h3 className="font-bold text-base mb-4">Monthly Earnings Overview (৳)</h3>
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.monthlyStats}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                  <XAxis dataKey="month" fontSize={12} />
+                  <YAxis fontSize={12} />
+                  <Tooltip />
+                  <Bar dataKey="revenue" fill="#059669" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* CUSTOMER OVERVIEW */}
+      {user?.role === "customer" && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <StatCard title="My Rental Bookings" value={customerCounts.rentals} icon={CalendarCheck} />
+            <StatCard title="Saved Favorites" value={customerCounts.favorites} icon={Heart} />
+          </div>
+
+          <div className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-lg">Need equipment for your next project?</h3>
+              <p className="text-sm text-[var(--muted-foreground)]">
+                Browse verified construction, photography, and event equipment across Bangladesh.
+              </p>
+            </div>
+            <Link
+              href="/equipment"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-sm font-semibold shrink-0"
+            >
+              Browse Equipment <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StatCard({
+  title,
+  value,
+  icon: Icon,
+  highlight = false,
+}: {
+  title: string;
+  value: string | number;
+  icon: any;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-xs flex items-center justify-between">
+      <div>
+        <p className="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">
+          {title}
+        </p>
+        <p className={`text-2xl sm:text-3xl font-black mt-1.5 ${highlight ? "text-amber-500" : ""}`}>
+          {value}
+        </p>
+      </div>
+      <div className="h-12 w-12 rounded-xl bg-[#059669]/10 text-[#059669] flex items-center justify-center shrink-0">
+        <Icon className="h-6 w-6" />
+      </div>
+    </div>
+  );
+}
