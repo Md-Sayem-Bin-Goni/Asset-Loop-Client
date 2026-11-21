@@ -5,8 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import axiosSecure from "@/lib/axiosSecure";
 import { useAuth } from "@/providers/AuthProvider";
 import PrivateRoute from "@/components/shared/PrivateRoute";
-import Navbar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
+
 import { Equipment } from "@/types";
 import { toast } from "sonner";
 import {
@@ -421,13 +420,13 @@ function EquipmentDetailsContent() {
 export default function EquipmentDetailsPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+  
       <main className="flex-1">
         <PrivateRoute>
           <EquipmentDetailsContent />
         </PrivateRoute>
       </main>
-      <Footer />
+    
     </div>
   );
 }

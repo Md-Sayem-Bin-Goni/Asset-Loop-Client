@@ -5,11 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Menu, X, Sun, Moon, Layers, LayoutDashboard, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
-export default function Navbar() {
+function NavbarContent() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isLoading } = useAuth();
@@ -191,5 +191,13 @@ export default function Navbar() {
         </div>
       )}
     </header>
+  );
+}
+
+export default function Navbar() {
+  return (
+    <Suspense fallback={<div className="h-16 w-full bg-[#111827] dark:bg-[#030712] border-b border-gray-800" />}>
+      <NavbarContent />
+    </Suspense>
   );
 }
