@@ -36,15 +36,18 @@ const reviews = [
 
 export default function CustomerReviews() {
   return (
-    <section className="py-16 sm:py-20 bg-[var(--secondary)]/50 border-y border-[var(--border)]">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50/70 to-white dark:from-[#090D16] dark:to-[#0c121e] border-y border-gray-200/80 dark:border-gray-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981]">
             Testimonials
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
             What Our Renters Say
           </h2>
+          <p className="text-sm text-[var(--muted-foreground)] mt-2">
+            Real feedback from verified contractors, filmmakers, and business owners.
+          </p>
         </div>
 
         <motion.div
@@ -57,7 +60,7 @@ export default function CustomerReviews() {
           {reviews.map((rev) => (
             <div
               key={rev.name}
-              className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] flex flex-col justify-between space-y-4 shadow-xs"
+              className="p-6 rounded-2xl bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-xl hover:border-[#059669]/50 hover:-translate-y-1 transition-all duration-300"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -66,15 +69,15 @@ export default function CustomerReviews() {
                       <Star key={idx} className="h-4 w-4 fill-current" />
                     ))}
                   </div>
-                  <Quote className="h-5 w-5 text-[#059669]/30" />
+                  <Quote className="h-5 w-5 text-[#059669]/30 dark:text-[#10B981]/30" />
                 </div>
-                <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                <p className="text-xs text-[var(--muted-foreground)] leading-relaxed italic">
                   &ldquo;{rev.comment}&rdquo;
                 </p>
               </div>
               <div className="pt-3 border-t border-[var(--border)]">
                 <p className="text-sm font-bold">{rev.name}</p>
-                <p className="text-[11px] text-[#059669] font-medium">{rev.role}</p>
+                <p className="text-[11px] text-[#059669] dark:text-[#10B981] font-semibold">{rev.role}</p>
               </div>
             </div>
           ))}

@@ -6,7 +6,7 @@ import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Equipment } from "@/types";
 import { toast } from "sonner";
-import { Loader2, Package, CheckCircle2, XCircle, Trash2 } from "lucide-react";
+import { Loader2, Package, CheckCircle2, XCircle, Trash2, Clock } from "lucide-react";
 
 export default function AdminAllEquipmentPage() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -72,66 +72,78 @@ export default function AdminAllEquipmentPage() {
             <Loader2 className="h-8 w-8 text-[#059669] animate-spin" />
           </div>
         ) : equipments.length === 0 ? (
-          <div className="p-12 rounded-2xl bg-[var(--card)] border border-dashed border-[var(--border)] text-center space-y-2">
-            <Package className="h-10 w-10 text-[#059669] mx-auto" />
-            <h3 className="font-bold text-lg">No Equipment Submitted Yet</h3>
+          <div className="p-12 sm:p-16 rounded-2xl bg-white dark:bg-gray-900/60 border border-dashed border-gray-300 dark:border-gray-800 text-center space-y-3 shadow-xs">
+            <div className="h-14 w-14 rounded-2xl bg-[#059669]/10 text-[#059669] dark:text-[#10B981] flex items-center justify-center mx-auto">
+              <Package className="h-7 w-7" />
+            </div>
+            <h3 className="font-extrabold text-lg">No Equipment Submitted Yet</h3>
+            <p className="text-sm text-[var(--muted-foreground)] max-w-sm mx-auto">
+              Equipment listings submitted by owners will appear here for review and approval.
+            </p>
           </div>
         ) : (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/60 text-xs uppercase text-[var(--muted-foreground)]">
-                    <th className="py-3.5 px-4 font-semibold">Equipment</th>
-                    <th className="py-3.5 px-4 font-semibold">Owner</th>
-                    <th className="py-3.5 px-4 font-semibold">Category</th>
-                    <th className="py-3.5 px-4 font-semibold">Price</th>
-                    <th className="py-3.5 px-4 font-semibold">Status</th>
-                    <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
+                  <tr className="border-b border-gray-200/90 dark:border-gray-800 bg-slate-50/80 dark:bg-gray-900/90 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <th className="py-4 px-5">Equipment</th>
+                    <th className="py-4 px-5">Owner</th>
+                    <th className="py-4 px-5">Category</th>
+                    <th className="py-4 px-5">Price</th>
+                    <th className="py-4 px-5">Status</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800/80">
                   {equipments.map((item) => (
-                    <tr key={item._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
-                      <td className="py-3.5 px-4 flex items-center gap-3">
+                    <tr key={item._id} className="hover:bg-slate-50/60 dark:hover:bg-gray-800/40 transition-colors">
+                      <td className="py-4 px-5 flex items-center gap-3.5">
                         <Image
                           src={item.image}
                           alt={item.name}
                           width={48}
                           height={40}
-                          className="h-10 w-12 rounded-lg object-cover border border-[var(--border)] shrink-0"
+                          className="h-10 w-12 rounded-lg object-cover border border-gray-200 dark:border-gray-800 shrink-0 shadow-xs"
                         />
                         <div>
-                          <p className="font-semibold">{item.name}</p>
+                          <p className="font-bold text-[var(--foreground)]">{item.name}</p>
                           <p className="text-[11px] text-[var(--muted-foreground)]">{item.location}</p>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-xs">
-                        <p className="font-medium">{item.owner?.name}</p>
+                      <td className="py-4 px-5 text-xs">
+                        <p className="font-bold text-[var(--foreground)]">{item.owner?.name}</p>
                         <p className="text-[11px] text-[var(--muted-foreground)]">{item.owner?.email}</p>
                       </td>
-                      <td className="py-3.5 px-4 text-xs">{item.category}</td>
-                      <td className="py-3.5 px-4 font-bold text-[#059669]">
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)]">{item.category}</td>
+                      <td className="py-4 px-5 font-extrabold text-[#059669] dark:text-[#10B981] whitespace-nowrap">
                         ৳{item.rentalPrice.toLocaleString()}/{item.rentalType}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-4 px-5 whitespace-nowrap">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                             item.status === "Approved"
-                              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                               : item.status === "Rejected"
-                              ? "bg-red-500/15 text-red-600"
-                              : "bg-amber-500/15 text-amber-600"
+                              ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
+                              : "bg-amber-500/15 text-amber-700 dark:text-amber-400"
                           }`}
                         >
+                          {item.status === "Approved" ? (
+                            <CheckCircle2 className="h-3 w-3" />
+                          ) : item.status === "Rejected" ? (
+                            <XCircle className="h-3 w-3" />
+                          ) : (
+                            <Clock className="h-3 w-3" />
+                          )}
                           {item.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+                      <td className="py-4 px-5 text-right space-x-1.5 whitespace-nowrap">
                         {item.status !== "Approved" && (
                           <button
                             onClick={() => handleStatusChange(item._id, "Approved")}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-600 text-emerald-600 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-600 text-emerald-700 hover:text-white dark:text-emerald-400 dark:hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" /> Approve
                           </button>
@@ -139,14 +151,14 @@ export default function AdminAllEquipmentPage() {
                         {item.status !== "Rejected" && (
                           <button
                             onClick={() => handleStatusChange(item._id, "Rejected")}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-600 text-amber-600 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-600 text-amber-700 hover:text-white dark:text-amber-400 dark:hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
                           >
                             <XCircle className="h-3.5 w-3.5" /> Reject
                           </button>
                         )}
                         <button
                           onClick={() => handleDelete(item._id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-semibold cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-bold cursor-pointer transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" /> Delete
                         </button>

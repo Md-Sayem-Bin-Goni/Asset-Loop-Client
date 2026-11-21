@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Booking } from "@/types";
-import { Loader2, CalendarCheck } from "lucide-react";
+import { Loader2, CalendarCheck, CheckCircle2, Clock } from "lucide-react";
 
 export default function AdminAllRentalsPage() {
   const [rentals, setRentals] = useState<Booking[]>([]);
@@ -42,53 +42,59 @@ export default function AdminAllRentalsPage() {
             <Loader2 className="h-8 w-8 text-[#059669] animate-spin" />
           </div>
         ) : rentals.length === 0 ? (
-          <div className="p-12 rounded-2xl bg-[var(--card)] border border-dashed border-[var(--border)] text-center space-y-2">
-            <CalendarCheck className="h-10 w-10 text-[#059669] mx-auto" />
-            <h3 className="font-bold text-lg">No Platform Rentals Yet</h3>
+          <div className="p-12 sm:p-16 rounded-2xl bg-white dark:bg-gray-900/60 border border-dashed border-gray-300 dark:border-gray-800 text-center space-y-3 shadow-xs">
+            <div className="h-14 w-14 rounded-2xl bg-[#059669]/10 text-[#059669] dark:text-[#10B981] flex items-center justify-center mx-auto">
+              <CalendarCheck className="h-7 w-7" />
+            </div>
+            <h3 className="font-extrabold text-lg">No Platform Rentals Yet</h3>
+            <p className="text-sm text-[var(--muted-foreground)] max-w-sm mx-auto">
+              All booking transactions made by customers will appear here in real-time.
+            </p>
           </div>
         ) : (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/60 text-xs uppercase text-[var(--muted-foreground)]">
-                    <th className="py-3.5 px-4 font-semibold">Equipment</th>
-                    <th className="py-3.5 px-4 font-semibold">Customer</th>
-                    <th className="py-3.5 px-4 font-semibold">Owner</th>
-                    <th className="py-3.5 px-4 font-semibold">Duration</th>
-                    <th className="py-3.5 px-4 font-semibold">Amount</th>
-                    <th className="py-3.5 px-4 font-semibold">Payment</th>
-                    <th className="py-3.5 px-4 font-semibold">Status</th>
+                  <tr className="border-b border-gray-200/90 dark:border-gray-800 bg-slate-50/80 dark:bg-gray-900/90 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <th className="py-4 px-5">Equipment</th>
+                    <th className="py-4 px-5">Customer</th>
+                    <th className="py-4 px-5">Owner</th>
+                    <th className="py-4 px-5">Duration</th>
+                    <th className="py-4 px-5">Amount</th>
+                    <th className="py-4 px-5">Payment</th>
+                    <th className="py-4 px-5">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800/80">
                   {rentals.map((item) => (
-                    <tr key={item._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
-                      <td className="py-3.5 px-4 font-semibold">{item.equipmentName}</td>
-                      <td className="py-3.5 px-4 text-xs">
-                        <p className="font-medium">{item.customerName}</p>
+                    <tr key={item._id} className="hover:bg-slate-50/60 dark:hover:bg-gray-800/40 transition-colors">
+                      <td className="py-4 px-5 font-bold text-[var(--foreground)]">{item.equipmentName}</td>
+                      <td className="py-4 px-5 text-xs">
+                        <p className="font-bold text-[var(--foreground)]">{item.customerName}</p>
                         <p className="text-[11px] text-[var(--muted-foreground)]">{item.customerEmail}</p>
                       </td>
-                      <td className="py-3.5 px-4 text-xs text-[var(--muted-foreground)]">{item.ownerEmail}</td>
-                      <td className="py-3.5 px-4 text-xs">
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)] whitespace-nowrap">{item.ownerEmail}</td>
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)] whitespace-nowrap">
                         {item.startDate} → {item.endDate}
                       </td>
-                      <td className="py-3.5 px-4 font-bold text-[#059669]">
+                      <td className="py-4 px-5 font-extrabold text-[#059669] dark:text-[#10B981] whitespace-nowrap">
                         ৳{Number(item.totalAmount).toLocaleString()}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-4 px-5 whitespace-nowrap">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                             item.paymentStatus === "Paid"
-                              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                              : "bg-amber-500/15 text-amber-600"
+                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                              : "bg-amber-500/15 text-amber-700 dark:text-amber-400"
                           }`}
                         >
+                          {item.paymentStatus === "Paid" ? <CheckCircle2 className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
                           {item.paymentStatus}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4">
-                        <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-600">
+                      <td className="py-4 px-5 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/15 text-blue-700 dark:text-blue-400">
                           {item.bookingStatus}
                         </span>
                       </td>

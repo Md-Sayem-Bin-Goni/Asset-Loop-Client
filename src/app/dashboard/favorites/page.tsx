@@ -65,54 +65,56 @@ export default function FavoritesPage() {
             <Loader2 className="h-8 w-8 text-[#059669] animate-spin" />
           </div>
         ) : favorites.length === 0 ? (
-          <div className="p-12 rounded-2xl bg-[var(--card)] border border-dashed border-[var(--border)] text-center space-y-2">
-            <Heart className="h-10 w-10 text-rose-500 mx-auto" />
-            <h3 className="font-bold text-lg">No Favorites Saved</h3>
-            <p className="text-sm text-[var(--muted-foreground)]">
-              Click &ldquo;Add to Favorites&rdquo; on any equipment page to save it here.
+          <div className="p-12 sm:p-16 rounded-2xl bg-white dark:bg-gray-900/60 border border-dashed border-gray-300 dark:border-gray-800 text-center space-y-3 shadow-xs">
+            <div className="h-14 w-14 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto">
+              <Heart className="h-7 w-7 fill-rose-500" />
+            </div>
+            <h3 className="font-extrabold text-lg">No Favorites Saved</h3>
+            <p className="text-sm text-[var(--muted-foreground)] max-w-sm mx-auto">
+              Click &ldquo;Add to Favorites&rdquo; on any equipment page to save items for quick booking here.
             </p>
           </div>
         ) : (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/60 text-xs uppercase text-[var(--muted-foreground)]">
-                    <th className="py-3.5 px-4 font-semibold">Equipment</th>
-                    <th className="py-3.5 px-4 font-semibold">Category</th>
-                    <th className="py-3.5 px-4 font-semibold">Location</th>
-                    <th className="py-3.5 px-4 font-semibold">Rental Rate</th>
-                    <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
+                  <tr className="border-b border-gray-200/90 dark:border-gray-800 bg-slate-50/80 dark:bg-gray-900/90 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <th className="py-4 px-5">Equipment</th>
+                    <th className="py-4 px-5">Category</th>
+                    <th className="py-4 px-5">Location</th>
+                    <th className="py-4 px-5">Rental Rate</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800/80">
                   {favorites.map((fav) => (
-                    <tr key={fav._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
-                      <td className="py-3.5 px-4 flex items-center gap-3">
+                    <tr key={fav._id} className="hover:bg-slate-50/60 dark:hover:bg-gray-800/40 transition-colors">
+                      <td className="py-4 px-5 flex items-center gap-3.5">
                         <Image
                           src={fav.image}
                           alt={fav.equipmentName}
                           width={48}
                           height={40}
-                          className="h-10 w-12 rounded-lg object-cover border border-[var(--border)] shrink-0"
+                          className="h-10 w-12 rounded-lg object-cover border border-gray-200 dark:border-gray-800 shrink-0 shadow-xs"
                         />
-                        <span className="font-semibold">{fav.equipmentName}</span>
+                        <span className="font-bold text-[var(--foreground)]">{fav.equipmentName}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-xs">{fav.category}</td>
-                      <td className="py-3.5 px-4 text-xs">{fav.location}</td>
-                      <td className="py-3.5 px-4 font-bold text-[#059669]">
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)]">{fav.category}</td>
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)]">{fav.location}</td>
+                      <td className="py-4 px-5 font-extrabold text-[#059669] dark:text-[#10B981]">
                         ৳{Number(fav.rentalPrice).toLocaleString()} / {fav.rentalType}
                       </td>
-                      <td className="py-3.5 px-4 text-right space-x-2">
+                      <td className="py-4 px-5 text-right space-x-2 whitespace-nowrap">
                         <Link
                           href={`/equipment/${fav.equipmentId}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#059669] hover:bg-[#047857] text-white text-xs font-semibold"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold shadow-xs transition-colors"
                         >
                           <ExternalLink className="h-3.5 w-3.5" /> View
                         </Link>
                         <button
                           onClick={() => handleRemove(fav._id)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-semibold cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-bold cursor-pointer transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" /> Remove
                         </button>

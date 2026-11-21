@@ -72,14 +72,14 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
       : customerLinks;
 
   const SidebarContent = (
-    <div className="flex flex-col h-full bg-white/95 dark:bg-[#090D16] text-[#111827] dark:text-gray-200 border-r border-gray-200 dark:border-gray-800 transition-colors">
+    <div className="flex flex-col h-full bg-white/95 dark:bg-[#090D16] text-[#111827] dark:text-gray-200 border-r border-gray-200/90 dark:border-gray-800 transition-colors">
       {/* Brand Header */}
-      <div className="h-16 px-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
+      <div className="h-16 px-6 flex items-center justify-between border-b border-gray-200/90 dark:border-gray-800">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#059669]">
+          <div className="p-2 rounded-lg bg-[#059669] shadow-xs">
             <Layers className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-[#111827] dark:text-white">
+          <span className="text-xl font-extrabold text-[#111827] dark:text-white">
             Asset<span className="text-[#059669] dark:text-[#10B981]">Loop</span>
           </span>
         </Link>
@@ -92,7 +92,7 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
       </div>
 
       {/* User Mini Profile Card */}
-      <div className="p-4 mx-3 mt-4 rounded-xl bg-slate-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/70 flex items-center gap-3 shadow-xs">
+      <div className="p-3.5 mx-3 mt-4 rounded-xl bg-slate-50 dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 flex items-center gap-3 shadow-xs">
         <Image
           src={user?.image || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "User") + "&background=059669&color=fff"}
           alt={user?.name || "User"}
@@ -102,7 +102,7 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
         />
         <div className="overflow-hidden">
           <p className="text-sm font-bold text-[#111827] dark:text-white truncate">{user?.name}</p>
-          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981]">
+          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-[#059669]/15 text-[#059669] dark:bg-[#059669]/25 dark:text-[#10B981]">
             {user?.role}
           </span>
         </div>
@@ -118,9 +118,9 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 isActive
-                  ? "bg-[#059669] text-white shadow-md shadow-emerald-950/20"
+                  ? "bg-[#059669] text-white shadow-sm shadow-emerald-950/20"
                   : "text-gray-600 hover:text-[#111827] hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800/70"
               }`}
             >
@@ -132,7 +132,7 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-1.5">
+      <div className="p-3 border-t border-gray-200/90 dark:border-gray-800 space-y-1.5">
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors cursor-pointer"

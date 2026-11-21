@@ -210,11 +210,11 @@ function EquipmentDetailsContent() {
   const isAvailable = equipment.availableQuantity > 0;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Left: Equipment Image & Terms */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)] shadow-sm">
+          <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden border border-gray-200/90 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-lg ring-1 ring-black/5 dark:ring-white/10">
             <Image
               src={equipment.image}
               alt={equipment.name}
@@ -226,8 +226,8 @@ function EquipmentDetailsContent() {
           </div>
 
           {/* Rental Terms & Conditions */}
-          <div className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-[#059669] flex items-center gap-2">
+          <div className="p-6 rounded-2xl bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 shadow-xs space-y-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-[#059669] dark:text-[#10B981] flex items-center gap-2">
               <FileText className="h-4 w-4" /> Rental Terms &amp; Conditions
             </h3>
             <p className="text-sm text-[var(--muted-foreground)] leading-relaxed whitespace-pre-line">
@@ -240,14 +240,14 @@ function EquipmentDetailsContent() {
         <div className="lg:col-span-6 space-y-6">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-[#059669]/10 text-[#059669] flex items-center gap-1">
+              <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981] flex items-center gap-1.5 shadow-xs">
                 <Tag className="h-3.5 w-3.5" /> {equipment.category}
               </span>
               <span
-                className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 ${
+                className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs ${
                   isAvailable
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                    : "bg-red-500/10 text-red-600"
+                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                    : "bg-red-500/15 text-red-700 dark:text-red-400"
                 }`}
               >
                 <CheckCircle2 className="h-3.5 w-3.5" />
@@ -255,20 +255,20 @@ function EquipmentDetailsContent() {
               </span>
             </div>
 
-            <h1 className="text-3xl font-extrabold tracking-tight">{equipment.name}</h1>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">{equipment.name}</h1>
 
             <p className="text-sm text-[var(--muted-foreground)] flex items-center gap-1.5">
-              <MapPin className="h-4 w-4 text-[#059669]" /> {equipment.location}
+              <MapPin className="h-4 w-4 text-[#059669] dark:text-[#10B981]" /> {equipment.location}
             </p>
           </div>
 
-          {/* Price Box */}
-          <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] flex items-center justify-between">
+          {/* Pricing Callout Box */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/25 flex flex-wrap items-center justify-between gap-4 shadow-xs">
             <div>
-              <p className="text-xs text-[var(--muted-foreground)]">Rental Rate</p>
-              <p className="text-3xl font-black text-[#059669]">
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">Rental Rate</p>
+              <p className="text-3xl sm:text-4xl font-black text-[#059669] dark:text-[#10B981] mt-1">
                 ৳{equipment.rentalPrice.toLocaleString()}
-                <span className="text-sm font-medium text-[var(--muted-foreground)]">
+                <span className="text-sm font-semibold text-[var(--muted-foreground)]">
                   {" "}
                   / {equipment.rentalType}
                 </span>
@@ -283,7 +283,7 @@ function EquipmentDetailsContent() {
 
           {/* Description */}
           <div className="space-y-2">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
               Description
             </h3>
             <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
@@ -292,17 +292,17 @@ function EquipmentDetailsContent() {
           </div>
 
           {/* Owner Information */}
-          <div className="p-5 rounded-2xl bg-[var(--secondary)]/60 border border-[var(--border)] space-y-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#059669] flex items-center gap-1.5">
+          <div className="p-5 rounded-2xl bg-slate-50 dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 space-y-2 shadow-xs">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#059669] dark:text-[#10B981] flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4" /> Verified Equipment Owner
             </p>
             <div className="flex items-center gap-3 pt-1">
-              <div className="h-10 w-10 rounded-full bg-[#059669] text-white flex items-center justify-center font-bold">
+              <div className="h-10 w-10 rounded-full bg-[#059669] text-white flex items-center justify-center font-bold shadow-xs">
                 {equipment.owner?.name?.charAt(0) || "O"}
               </div>
               <div className="text-sm">
                 <p className="font-bold flex items-center gap-1.5">
-                  <User className="h-3.5 w-3.5 text-[#059669]" /> {equipment.owner?.name}
+                  <User className="h-3.5 w-3.5 text-[#059669] dark:text-[#10B981]" /> {equipment.owner?.name}
                 </p>
                 <p className="text-xs text-[var(--muted-foreground)] flex items-center gap-1.5">
                   <Mail className="h-3.5 w-3.5" /> {equipment.owner?.email}
@@ -316,7 +316,7 @@ function EquipmentDetailsContent() {
             <button
               disabled={!isAvailable}
               onClick={() => setModalOpen(true)}
-              className="flex-1 py-3.5 px-6 rounded-xl bg-[#059669] hover:bg-[#047857] disabled:opacity-50 text-white font-bold text-sm shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#059669] to-[#047857] hover:from-[#047857] hover:to-[#065f46] disabled:opacity-50 text-white font-bold text-sm shadow-md shadow-emerald-600/25 hover:shadow-lg hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Calendar className="h-4 w-4" />
               {isAvailable ? "Book Equipment Now" : "Currently Unavailable"}
@@ -325,10 +325,10 @@ function EquipmentDetailsContent() {
             <button
               onClick={handleAddToFavorites}
               disabled={favLoading || isFavorite}
-              className={`py-3.5 px-5 rounded-xl border text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
+              className={`py-3.5 px-5 rounded-xl border text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
                 isFavorite
-                  ? "border-rose-200 bg-rose-50/60 dark:border-rose-900/50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-                  : "border-[var(--border)] bg-[var(--card)] hover:border-[#059669]"
+                  ? "border-rose-200 bg-rose-50/70 dark:border-rose-900/50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+                  : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 hover:border-[#059669] dark:hover:border-[#10B981]"
               }`}
             >
               <Heart
@@ -349,7 +349,7 @@ function EquipmentDetailsContent() {
       {/* Booking Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-2xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
               <div>
                 <h2 className="text-lg font-bold">Book {equipment.name}</h2>
@@ -375,7 +375,7 @@ function EquipmentDetailsContent() {
                     min={new Date().toISOString().split("T")[0]}
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm"
                   />
                 </div>
                 <div>
@@ -386,7 +386,7 @@ function EquipmentDetailsContent() {
                     min={startDate || new Date().toISOString().split("T")[0]}
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm"
                   />
                 </div>
               </div>
@@ -403,7 +403,7 @@ function EquipmentDetailsContent() {
                     max={equipment.availableQuantity}
                     value={requiredQuantity}
                     onChange={(e) => setRequiredQuantity(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm"
                   />
                 </div>
                 <div>
@@ -414,7 +414,7 @@ function EquipmentDetailsContent() {
                     value={contactNumber}
                     onChange={(e) => setContactNumber(e.target.value)}
                     placeholder="+880 17XX-XXXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm"
                   />
                 </div>
               </div>
@@ -427,7 +427,7 @@ function EquipmentDetailsContent() {
                   value={deliveryAddress}
                   onChange={(e) => setDeliveryAddress(e.target.value)}
                   placeholder="House/Site address, Road, Area, City"
-                  className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm"
                 />
               </div>
 
@@ -438,7 +438,7 @@ function EquipmentDetailsContent() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Any delivery instructions or operator requirements..."
-                  className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm"
                 />
               </div>
 
@@ -450,13 +450,13 @@ function EquipmentDetailsContent() {
                   </p>
                   <p className="text-[var(--muted-foreground)]">Includes verified rental protection</p>
                 </div>
-                <p className="text-2xl font-black text-[#059669]">৳{totalAmount.toLocaleString()}</p>
+                <p className="text-2xl font-black text-[#059669] dark:text-[#10B981]">৳{totalAmount.toLocaleString()}</p>
               </div>
 
               <button
                 type="submit"
                 disabled={bookingLoading}
-                className="w-full py-3 px-4 rounded-xl bg-[#059669] hover:bg-[#047857] disabled:opacity-60 text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3 px-4 rounded-xl bg-[#059669] hover:bg-[#047857] disabled:opacity-60 text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-emerald-600/25 transition-all"
               >
                 {bookingLoading ? (
                   <>

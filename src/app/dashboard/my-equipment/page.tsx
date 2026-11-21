@@ -6,7 +6,7 @@ import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Equipment } from "@/types";
 import { toast } from "sonner";
-import { Loader2, Package, Edit, Trash2, Eye, X } from "lucide-react";
+import { Loader2, Package, Edit, Trash2, Eye, X, CheckCircle2, XCircle, Clock } from "lucide-react";
 
 export default function MyEquipmentPage() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -81,7 +81,7 @@ export default function MyEquipmentPage() {
           </div>
           <Link
             href="/dashboard/add-equipment"
-            className="px-4 py-2 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-xs font-semibold"
+            className="px-4 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 transition-all"
           >
             + Add New
           </Link>
@@ -92,65 +92,74 @@ export default function MyEquipmentPage() {
             <Loader2 className="h-8 w-8 text-[#059669] animate-spin" />
           </div>
         ) : equipments.length === 0 ? (
-          <div className="p-12 rounded-2xl bg-[var(--card)] border border-dashed border-[var(--border)] text-center space-y-2">
-            <Package className="h-10 w-10 text-[#059669] mx-auto" />
-            <h3 className="font-bold text-lg">No Equipment Listed Yet</h3>
-            <p className="text-sm text-[var(--muted-foreground)]">
+          <div className="p-12 sm:p-16 rounded-2xl bg-white dark:bg-gray-900/60 border border-dashed border-gray-300 dark:border-gray-800 text-center space-y-3 shadow-xs">
+            <div className="h-14 w-14 rounded-2xl bg-[#059669]/10 text-[#059669] dark:text-[#10B981] flex items-center justify-center mx-auto">
+              <Package className="h-7 w-7" />
+            </div>
+            <h3 className="font-extrabold text-lg">No Equipment Listed Yet</h3>
+            <p className="text-sm text-[var(--muted-foreground)] max-w-sm mx-auto">
               Add your first equipment item to start receiving rental bookings.
             </p>
           </div>
         ) : (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/60 text-xs uppercase text-[var(--muted-foreground)]">
-                    <th className="py-3.5 px-4 font-semibold">Equipment Name</th>
-                    <th className="py-3.5 px-4 font-semibold">Category</th>
-                    <th className="py-3.5 px-4 font-semibold">Rental Price</th>
-                    <th className="py-3.5 px-4 font-semibold">Quantity</th>
-                    <th className="py-3.5 px-4 font-semibold">Status</th>
-                    <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
+                  <tr className="border-b border-gray-200/90 dark:border-gray-800 bg-slate-50/80 dark:bg-gray-900/90 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <th className="py-4 px-5">Equipment Name</th>
+                    <th className="py-4 px-5">Category</th>
+                    <th className="py-4 px-5">Rental Price</th>
+                    <th className="py-4 px-5">Quantity</th>
+                    <th className="py-4 px-5">Status</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800/80">
                   {equipments.map((item) => (
-                    <tr key={item._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
-                      <td className="py-3.5 px-4 font-semibold">{item.name}</td>
-                      <td className="py-3.5 px-4 text-xs">{item.category}</td>
-                      <td className="py-3.5 px-4 font-bold text-[#059669]">
+                    <tr key={item._id} className="hover:bg-slate-50/60 dark:hover:bg-gray-800/40 transition-colors">
+                      <td className="py-4 px-5 font-bold text-[var(--foreground)]">{item.name}</td>
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)]">{item.category}</td>
+                      <td className="py-4 px-5 font-extrabold text-[#059669] dark:text-[#10B981]">
                         ৳{item.rentalPrice.toLocaleString()}/{item.rentalType}
                       </td>
-                      <td className="py-3.5 px-4 text-xs">{item.availableQuantity}</td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-4 px-5 text-xs text-[var(--muted-foreground)]">{item.availableQuantity} units</td>
+                      <td className="py-4 px-5 whitespace-nowrap">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                             item.status === "Approved"
-                              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                               : item.status === "Rejected"
-                              ? "bg-red-500/15 text-red-600"
-                              : "bg-amber-500/15 text-amber-600"
+                              ? "bg-rose-500/15 text-rose-700 dark:text-rose-400"
+                              : "bg-amber-500/15 text-amber-700 dark:text-amber-400"
                           }`}
                         >
+                          {item.status === "Approved" ? (
+                            <CheckCircle2 className="h-3 w-3" />
+                          ) : item.status === "Rejected" ? (
+                            <XCircle className="h-3 w-3" />
+                          ) : (
+                            <Clock className="h-3 w-3" />
+                          )}
                           {item.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-right space-x-1.5">
+                      <td className="py-4 px-5 text-right space-x-2 whitespace-nowrap">
                         <Link
                           href={`/equipment/${item._id}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[var(--secondary)] hover:bg-[#059669] hover:text-white text-xs font-medium transition-colors"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-[#059669] hover:text-white dark:hover:bg-[#059669] text-xs font-bold transition-colors"
                         >
                           <Eye className="h-3.5 w-3.5" /> View
                         </Link>
                         <button
                           onClick={() => setEditingItem(item)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 text-xs font-semibold cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold cursor-pointer transition-colors"
                         >
-                          <Edit className="h-3.5 w-3.5" /> Update
+                          <Edit className="h-3.5 w-3.5" /> Edit
                         </button>
                         <button
                           onClick={() => handleDelete(item._id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-semibold cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-bold cursor-pointer transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" /> Delete
                         </button>
@@ -166,14 +175,14 @@ export default function MyEquipmentPage() {
         {/* Update Modal */}
         {editingItem && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 space-y-4">
+            <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 space-y-4 shadow-2xl">
               <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-                <h2 className="font-bold text-lg">Update Equipment</h2>
-                <button onClick={() => setEditingItem(null)} className="cursor-pointer">
+                <h2 className="font-extrabold text-lg">Update Equipment</h2>
+                <button onClick={() => setEditingItem(null)} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <form onSubmit={handleUpdateSubmit} className="space-y-3.5">
+              <form onSubmit={handleUpdateSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold mb-1">Equipment Name</label>
                   <input
@@ -181,7 +190,7 @@ export default function MyEquipmentPage() {
                     required
                     value={editingItem.name}
                     onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -194,7 +203,7 @@ export default function MyEquipmentPage() {
                       onChange={(e) =>
                         setEditingItem({ ...editingItem, rentalPrice: Number(e.target.value) })
                       }
-                      className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                      className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
                     />
                   </div>
                   <div>
@@ -209,7 +218,7 @@ export default function MyEquipmentPage() {
                           availableQuantity: Number(e.target.value),
                         })
                       }
-                      className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                      className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
                     />
                   </div>
                 </div>
@@ -220,13 +229,13 @@ export default function MyEquipmentPage() {
                     required
                     value={editingItem.location}
                     onChange={(e) => setEditingItem({ ...editingItem, location: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                    className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={updating}
-                  className="w-full py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-semibold text-sm cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-bold text-sm shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
                 >
                   {updating ? "Updating..." : "Save Changes"}
                 </button>

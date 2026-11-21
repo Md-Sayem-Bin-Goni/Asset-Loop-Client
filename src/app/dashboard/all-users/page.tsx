@@ -93,29 +93,31 @@ export default function AllUsersPage() {
             <Loader2 className="h-8 w-8 text-[#059669] animate-spin" />
           </div>
         ) : users.length === 0 ? (
-          <div className="p-12 rounded-2xl bg-[var(--card)] border border-dashed border-[var(--border)] text-center space-y-2">
-            <Users className="h-10 w-10 text-[#059669] mx-auto" />
-            <h3 className="font-bold text-lg">No Users Found</h3>
+          <div className="p-12 sm:p-16 rounded-2xl bg-white dark:bg-gray-900/60 border border-dashed border-gray-300 dark:border-gray-800 text-center space-y-3 shadow-xs">
+            <div className="h-14 w-14 rounded-2xl bg-[#059669]/10 text-[#059669] dark:text-[#10B981] flex items-center justify-center mx-auto">
+              <Users className="h-7 w-7" />
+            </div>
+            <h3 className="font-extrabold text-lg">No Users Found</h3>
           </div>
         ) : (
-          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/60 text-xs uppercase text-[var(--muted-foreground)]">
-                    <th className="py-3.5 px-4 font-semibold">User</th>
-                    <th className="py-3.5 px-4 font-semibold">Email</th>
-                    <th className="py-3.5 px-4 font-semibold">Current Role</th>
-                    <th className="py-3.5 px-4 font-semibold">Change Role</th>
-                    <th className="py-3.5 px-4 font-semibold text-right">Action</th>
+                  <tr className="border-b border-gray-200/90 dark:border-gray-800 bg-slate-50/80 dark:bg-gray-900/90 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <th className="py-4 px-5">User</th>
+                    <th className="py-4 px-5">Email</th>
+                    <th className="py-4 px-5">Current Role</th>
+                    <th className="py-4 px-5">Change Role</th>
+                    <th className="py-4 px-5 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800/80">
                   {users.map((u) => {
                     const isSelf = u.email === currentUser?.email;
                     return (
-                      <tr key={u._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
-                        <td className="py-3.5 px-4 flex items-center gap-3">
+                      <tr key={u._id} className="hover:bg-slate-50/60 dark:hover:bg-gray-800/40 transition-colors">
+                        <td className="py-4 px-5 flex items-center gap-3.5">
                           <Image
                             src={
                               u.image ||
@@ -124,41 +126,41 @@ export default function AllUsersPage() {
                             alt={u.name}
                             width={36}
                             height={36}
-                            className="h-9 w-9 rounded-full object-cover border border-[var(--border)] shrink-0"
+                            className="h-9 w-9 rounded-full object-cover border border-gray-200 dark:border-gray-800 shrink-0 shadow-xs"
                           />
-                          <span className="font-semibold">{u.name}</span>
+                          <span className="font-bold text-[var(--foreground)]">{u.name}</span>
                         </td>
-                        <td className="py-3.5 px-4 text-xs text-[var(--muted-foreground)]">{u.email}</td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-4 px-5 text-xs text-[var(--muted-foreground)]">{u.email}</td>
+                        <td className="py-4 px-5 whitespace-nowrap">
                           <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold uppercase ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
                               u.role === "admin"
-                                ? "bg-purple-500/15 text-purple-600 dark:text-purple-400"
+                                ? "bg-purple-500/15 text-purple-700 dark:text-purple-400"
                                 : u.role === "owner"
-                                ? "bg-blue-500/15 text-blue-600 dark:text-blue-400"
-                                : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                                ? "bg-blue-500/15 text-blue-700 dark:text-blue-400"
+                                : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                             }`}
                           >
                             <Shield className="h-3 w-3" /> {u.role}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-4 px-5">
                           <select
                             disabled={isSelf}
                             value={u.role}
                             onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                            className="px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-xs font-semibold disabled:opacity-50 cursor-pointer"
+                            className="px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 text-xs font-bold disabled:opacity-50 cursor-pointer shadow-xs"
                           >
                             <option value="customer">Customer</option>
                             <option value="owner">Owner</option>
                             <option value="admin">Admin</option>
                           </select>
                         </td>
-                        <td className="py-3.5 px-4 text-right">
+                        <td className="py-4 px-5 text-right whitespace-nowrap">
                           <button
                             disabled={isSelf}
                             onClick={() => handleDeleteUser(u._id)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 disabled:opacity-40 text-red-600 text-xs font-semibold cursor-pointer"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 disabled:opacity-40 text-red-600 text-xs font-bold cursor-pointer transition-colors"
                           >
                             <Trash2 className="h-3.5 w-3.5" /> Delete
                           </button>

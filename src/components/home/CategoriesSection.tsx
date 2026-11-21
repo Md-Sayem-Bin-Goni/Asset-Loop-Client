@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { HardHat, Camera, Truck, Tractor, Cpu, Speaker } from "lucide-react";
+import { HardHat, Camera, Truck, Tractor, Cpu, Speaker, ArrowUpRight } from "lucide-react";
 
 const categories = [
   {
@@ -39,17 +39,17 @@ const categories = [
 
 export default function CategoriesSection() {
   return (
-    <section className="py-16 sm:py-20 bg-[var(--secondary)]/50 border-y border-[var(--border)]">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50/70 to-white dark:from-[#090D16] dark:to-[#0c121e] border-y border-gray-200/80 dark:border-gray-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981]">
             Browse By Industry
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
             Popular Equipment Categories
           </h2>
           <p className="text-sm text-[var(--muted-foreground)] mt-2">
-            Select a category to filter verified rental gear available near your city.
+            Select an industry category to filter verified rental gear available in your district.
           </p>
         </div>
 
@@ -66,19 +66,22 @@ export default function CategoriesSection() {
               <Link
                 key={cat.name}
                 href={`/equipment?category=${encodeURIComponent(cat.name)}`}
-                className="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] hover:border-[#059669] shadow-xs hover:shadow-md transition-all flex items-start gap-4 group"
+                className="p-6 rounded-2xl bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 hover:border-[#059669] dark:hover:border-[#10B981] shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-start justify-between gap-4 group relative overflow-hidden"
               >
-                <div className="p-3 rounded-xl bg-[#059669]/10 text-[#059669] group-hover:bg-[#059669] group-hover:text-white transition-colors shrink-0">
-                  <Icon className="h-6 w-6" />
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-[#059669]/10 dark:bg-[#059669]/20 text-[#059669] dark:text-[#10B981] group-hover:bg-[#059669] group-hover:text-white transition-all duration-300 shrink-0 shadow-xs">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base group-hover:text-[#059669] dark:group-hover:text-[#10B981] transition-colors">
+                      {cat.name}
+                    </h3>
+                    <p className="text-xs text-[var(--muted-foreground)] mt-1.5 leading-relaxed">
+                      {cat.desc}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-base group-hover:text-[#059669] transition-colors">
-                    {cat.name}
-                  </h3>
-                  <p className="text-xs text-[var(--muted-foreground)] mt-1 leading-relaxed">
-                    {cat.desc}
-                  </p>
-                </div>
+                <ArrowUpRight className="h-4 w-4 text-gray-400 group-hover:text-[#059669] dark:group-hover:text-[#10B981] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-1" />
               </Link>
             );
           })}

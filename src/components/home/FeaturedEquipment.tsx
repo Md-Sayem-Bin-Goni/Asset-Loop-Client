@@ -6,7 +6,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Equipment } from "@/types";
 import EquipmentCard from "@/components/shared/EquipmentCard";
-import { ArrowRight, PackageOpen } from "lucide-react";
+import { ArrowRight, PackageOpen, Sparkles } from "lucide-react";
 
 export default function FeaturedEquipment() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -31,21 +31,26 @@ export default function FeaturedEquipment() {
   }, []);
 
   return (
-    <section className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981]">
+            <Sparkles className="h-3 w-3" />
             Top Picks For You
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
             Featured Equipment
           </h2>
+          <p className="text-xs sm:text-sm text-[var(--muted-foreground)] mt-1">
+            Top-rated and verified gear ready for immediate reservation.
+          </p>
         </div>
         <Link
           href="/equipment"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#059669] hover:text-[#047857]"
+          className="inline-flex items-center gap-1.5 text-sm font-bold text-[#059669] dark:text-[#10B981] hover:text-[#047857] group shrink-0"
         >
-          Browse All Equipment <ArrowRight className="h-4 w-4" />
+          Browse All Equipment
+          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 
@@ -59,9 +64,9 @@ export default function FeaturedEquipment() {
           ))}
         </div>
       ) : equipments.length === 0 ? (
-        <div className="text-center py-16 bg-[var(--card)] border border-dashed border-[var(--border)] rounded-2xl space-y-3">
+        <div className="text-center py-16 bg-[var(--card)] border border-dashed border-[var(--border)] rounded-2xl space-y-3 shadow-xs">
           <PackageOpen className="h-10 w-10 text-[#059669] mx-auto" />
-          <h3 className="text-lg font-semibold">No Approved Equipment Yet</h3>
+          <h3 className="text-lg font-bold">No Approved Equipment Yet</h3>
           <p className="text-sm text-[var(--muted-foreground)] max-w-md mx-auto">
             Once an Equipment Owner adds items and an Admin approves them, the latest 6 items will appear right here.
           </p>
@@ -72,7 +77,7 @@ export default function FeaturedEquipment() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
         >
           {equipments.map((item) => (
             <EquipmentCard key={item._id} equipment={item} />
