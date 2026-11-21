@@ -2,7 +2,10 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 
-const client = new MongoClient(process.env.MONGODB_URI!);
+const mongoUri =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/assetloopDB";
+
+const client = new MongoClient(mongoUri);
 const db = client.db("assetloopDB");
 
 export const auth = betterAuth({
