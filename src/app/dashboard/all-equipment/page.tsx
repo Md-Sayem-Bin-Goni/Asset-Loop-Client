@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Equipment } from "@/types";
@@ -93,9 +94,11 @@ export default function AdminAllEquipmentPage() {
                   {equipments.map((item) => (
                     <tr key={item._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
                       <td className="py-3.5 px-4 flex items-center gap-3">
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.name}
+                          width={48}
+                          height={40}
                           className="h-10 w-12 rounded-lg object-cover border border-[var(--border)] shrink-0"
                         />
                         <div>

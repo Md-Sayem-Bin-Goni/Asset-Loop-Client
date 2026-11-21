@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { FavoriteItem } from "@/types";
@@ -88,9 +89,11 @@ export default function FavoritesPage() {
                   {favorites.map((fav) => (
                     <tr key={fav._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
                       <td className="py-3.5 px-4 flex items-center gap-3">
-                        <img
+                        <Image
                           src={fav.image}
                           alt={fav.equipmentName}
+                          width={48}
+                          height={40}
                           className="h-10 w-12 rounded-lg object-cover border border-[var(--border)] shrink-0"
                         />
                         <span className="font-semibold">{fav.equipmentName}</span>

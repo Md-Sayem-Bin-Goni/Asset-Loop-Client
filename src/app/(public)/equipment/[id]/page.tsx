@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import axiosSecure from "@/lib/axiosSecure";
 import { useAuth } from "@/providers/AuthProvider";
 import PrivateRoute from "@/components/shared/PrivateRoute";
@@ -213,11 +214,14 @@ function EquipmentDetailsContent() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Left: Equipment Image & Terms */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)] shadow-sm">
-            <img
+          <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)] shadow-sm">
+            <Image
               src={equipment.image}
               alt={equipment.name}
-              className="w-full h-80 sm:h-96 object-cover"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 600px"
+              className="object-cover"
             />
           </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { useAuth } from "@/providers/AuthProvider";
@@ -115,12 +116,14 @@ export default function AllUsersPage() {
                     return (
                       <tr key={u._id} className="hover:bg-[var(--secondary)]/30 transition-colors">
                         <td className="py-3.5 px-4 flex items-center gap-3">
-                          <img
+                          <Image
                             src={
                               u.image ||
                               `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || "U")}&background=059669&color=fff`
                             }
                             alt={u.name}
+                            width={36}
+                            height={36}
                             className="h-9 w-9 rounded-full object-cover border border-[var(--border)] shrink-0"
                           />
                           <span className="font-semibold">{u.name}</span>

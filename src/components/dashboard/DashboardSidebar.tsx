@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { signOut } from "@/lib/auth-client";
@@ -92,10 +93,12 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
 
       {/* User Mini Profile Card */}
       <div className="p-4 mx-3 mt-4 rounded-xl bg-slate-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/70 flex items-center gap-3 shadow-xs">
-        <img
+        <Image
           src={user?.image || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "User") + "&background=059669&color=fff"}
           alt={user?.name || "User"}
-          className="h-10 w-10 rounded-full object-cover border border-[#10B981]"
+          width={40}
+          height={40}
+          className="h-10 w-10 rounded-full object-cover border border-[#10B981] shrink-0"
         />
         <div className="overflow-hidden">
           <p className="text-sm font-bold text-[#111827] dark:text-white truncate">{user?.name}</p>

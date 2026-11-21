@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck, Sparkles, PlusCircle } from "lucide-react";
 
@@ -68,14 +69,17 @@ export default function BannerSection() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="lg:col-span-5"
           >
-            <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-2xl">
-              <img
+            <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-2xl">
+              <Image
                 src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1000&q=80"
                 alt="Industrial and Commercial Equipment"
-                className="w-full h-80 sm:h-96 object-cover"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 500px"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-white/95 dark:bg-gray-900/90 backdrop-blur-md border border-gray-200 dark:border-gray-800 shadow-lg flex items-center justify-between">
+              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-white/95 dark:bg-gray-900/90 backdrop-blur-md border border-gray-200 dark:border-gray-800 shadow-lg flex items-center justify-between z-10">
                 <div>
                   <p className="text-xs text-[#059669] dark:text-[#10B981] font-semibold">Nationwide Network</p>
                   <p className="text-sm font-bold text-[#111827] dark:text-white">64 Districts Coverage Ready</p>

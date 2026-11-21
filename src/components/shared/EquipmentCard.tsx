@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Equipment } from "@/types";
 import { useAuth } from "@/providers/AuthProvider";
 import { MapPin, Tag, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
@@ -16,17 +17,19 @@ export default function EquipmentCard({ equipment }: { equipment: Equipment }) {
     <div className="h-full flex flex-col bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-[#059669]/50 transition-all duration-300 group">
       {/* Uniform Fixed Aspect Image */}
       <div className="relative h-52 w-full overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
-        <img
+        <Image
           src={equipment.image || "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80"}
           alt={equipment.name}
-          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#111827]/85 text-white backdrop-blur-xs flex items-center gap-1">
+        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#111827]/85 text-white backdrop-blur-xs flex items-center gap-1 z-10">
           <Tag className="h-3 w-3 text-[#10B981]" />
           {equipment.category}
         </span>
         <span
-          className={`absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 backdrop-blur-xs ${
+          className={`absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 backdrop-blur-xs z-10 ${
             isAvailable
               ? "bg-emerald-600/90 text-white"
               : "bg-red-600/90 text-white"
