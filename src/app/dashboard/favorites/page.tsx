@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
+import { FavoriteItem } from "@/types";
+import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { Loader2, Heart, Trash2, ExternalLink } from "lucide-react";
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchFavorites = async () => {
@@ -18,7 +20,7 @@ export default function FavoritesPage() {
       if (res.data?.success) {
         setFavorites(res.data.favorites);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to load favorites:", error);
     } finally {
       setLoading(false);
@@ -36,8 +38,14 @@ export default function FavoritesPage() {
         setFavorites((prev) => prev.filter((item) => item._id !== id));
         toast.success("Removed from favorites");
       }
-    } catch {
-      toast.error("Failed to remove item");
+    } catch (err: unknown) {
+      let message = "Failed to remove item";
+      if (isAxiosError(err)) {
+        message = err.response?.data?.message || err.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
     }
   };
 

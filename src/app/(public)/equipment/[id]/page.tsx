@@ -5,8 +5,9 @@ import { useParams, useSearchParams } from "next/navigation";
 import axiosSecure from "@/lib/axiosSecure";
 import { useAuth } from "@/providers/AuthProvider";
 import PrivateRoute from "@/components/shared/PrivateRoute";
+import { isAxiosError } from "axios";
 
-import { Equipment } from "@/types";
+import { Equipment, FavoriteItem } from "@/types";
 import { toast } from "sonner";
 import {
   MapPin,
@@ -59,7 +60,7 @@ function EquipmentDetailsContent() {
         if (res.data?.success) {
           setEquipment(res.data.equipment);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         toast.error("Failed to load equipment details.");
       } finally {
         setLoading(false);
@@ -76,15 +77,14 @@ function EquipmentDetailsContent() {
         const res = await axiosSecure.get("/favorites");
         if (res.data?.success && Array.isArray(res.data.favorites)) {
           const found = res.data.favorites.some(
-            (fav: any) =>
+            (fav: FavoriteItem) =>
               fav.equipmentId === id ||
-              fav.equipmentId?._id === id ||
-              fav.equipment?._id === id ||
+              (fav as unknown as { equipmentId?: { _id?: string } }).equipmentId?._id === id ||
               fav._id === id
           );
           setIsFavorite(found);
         }
-      } catch {
+      } catch (err: unknown) {
         // Silently catch
       }
     };
@@ -129,11 +129,17 @@ function EquipmentDetailsContent() {
         setIsFavorite(true);
         toast.success("Saved to your Favorites!");
       }
-    } catch (err: any) {
-      if (err?.response?.data?.message === "Already added to favorites") {
-        setIsFavorite(true);
+    } catch (err: unknown) {
+      let message = "Could not add to favorites.";
+      if (isAxiosError(err)) {
+        if (err.response?.data?.message === "Already added to favorites") {
+          setIsFavorite(true);
+        }
+        message = err.response?.data?.message || err.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
       }
-      toast.error(err?.response?.data?.message || "Could not add to favorites.");
+      toast.error(message);
     } finally {
       setFavLoading(false);
     }
@@ -172,8 +178,14 @@ function EquipmentDetailsContent() {
       if (res.data?.checkoutUrl) {
         window.location.href = res.data.checkoutUrl;
       }
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to initiate Stripe checkout.");
+    } catch (err: unknown) {
+      let message = "Failed to initiate Stripe checkout.";
+      if (isAxiosError(err)) {
+        message = err.response?.data?.message || err.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
       setBookingLoading(false);
     }
   };

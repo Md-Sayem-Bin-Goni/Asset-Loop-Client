@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import axiosSecure from "@/lib/axiosSecure";
+import { AdminAnalyticsStats, OwnerAnalyticsStats } from "@/types";
 import {
   ResponsiveContainer,
   BarChart,
@@ -25,11 +26,13 @@ import {
   Heart,
   ArrowRight,
   Loader2,
+  LucideIcon,
 } from "lucide-react";
 
 export default function DashboardOverviewPage() {
   const { user } = useAuth();
-  const [stats, setStats] = useState<any>(null);
+  const [adminStats, setAdminStats] = useState<AdminAnalyticsStats | null>(null);
+  const [ownerStats, setOwnerStats] = useState<OwnerAnalyticsStats | null>(null);
   const [customerCounts, setCustomerCounts] = useState({ rentals: 0, favorites: 0 });
   const [loading, setLoading] = useState(true);
 
@@ -40,10 +43,10 @@ export default function DashboardOverviewPage() {
         setLoading(true);
         if (user.role === "admin") {
           const res = await axiosSecure.get("/analytics/admin");
-          if (res.data?.success) setStats(res.data.stats);
+          if (res.data?.success) setAdminStats(res.data.stats);
         } else if (user.role === "owner") {
           const res = await axiosSecure.get("/analytics/owner");
-          if (res.data?.success) setStats(res.data.stats);
+          if (res.data?.success) setOwnerStats(res.data.stats);
         } else {
           const [rentalsRes, favRes] = await Promise.all([
             axiosSecure.get("/bookings/customer"),
@@ -54,7 +57,7 @@ export default function DashboardOverviewPage() {
             favorites: favRes.data?.favorites?.length || 0,
           });
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Dashboard overview load error:", error);
       } finally {
         setLoading(false);
@@ -88,17 +91,17 @@ export default function DashboardOverviewPage() {
       </div>
 
       {/* ADMIN ANALYTICS */}
-      {user?.role === "admin" && stats && (
+      {user?.role === "admin" && adminStats && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <StatCard title="Total Users" value={stats.totalUsers} icon={Users} />
-            <StatCard title="Total Equipment" value={stats.totalEquipment} icon={Package} />
-            <StatCard title="Pending Approvals" value={stats.pendingApprovals} icon={Clock} highlight />
-            <StatCard title="Total Bookings" value={stats.totalBookings} icon={CalendarCheck} />
-            <StatCard title="Completed Rentals" value={stats.completedRentals} icon={CheckCircle2} />
+            <StatCard title="Total Users" value={adminStats.totalUsers} icon={Users} />
+            <StatCard title="Total Equipment" value={adminStats.totalEquipment} icon={Package} />
+            <StatCard title="Pending Approvals" value={adminStats.pendingApprovals} icon={Clock} highlight />
+            <StatCard title="Total Bookings" value={adminStats.totalBookings} icon={CalendarCheck} />
+            <StatCard title="Completed Rentals" value={adminStats.completedRentals} icon={CheckCircle2} />
             <StatCard
               title="Total Platform Revenue"
-              value={`৳${Number(stats.totalRevenue || 0).toLocaleString()}`}
+              value={`৳${Number(adminStats.totalRevenue || 0).toLocaleString()}`}
               icon={Banknote}
             />
           </div>
@@ -108,7 +111,7 @@ export default function DashboardOverviewPage() {
               <h3 className="font-bold text-base mb-4">Monthly Revenue (৳)</h3>
               <div className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={stats.monthlyStats}>
+                  <AreaChart data={adminStats.monthlyStats}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
                     <XAxis dataKey="month" fontSize={12} />
                     <YAxis fontSize={12} />
@@ -129,7 +132,7 @@ export default function DashboardOverviewPage() {
               <h3 className="font-bold text-base mb-4">Monthly Bookings Count</h3>
               <div className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={stats.monthlyStats}>
+                  <BarChart data={adminStats.monthlyStats}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
                     <XAxis dataKey="month" fontSize={12} />
                     <YAxis fontSize={12} />
@@ -144,14 +147,14 @@ export default function DashboardOverviewPage() {
       )}
 
       {/* OWNER ANALYTICS */}
-      {user?.role === "owner" && stats && (
+      {user?.role === "owner" && ownerStats && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <StatCard title="Listed Equipment" value={stats.totalListedEquipment} icon={Package} />
-            <StatCard title="Completed Rentals" value={stats.completedRentals} icon={CheckCircle2} />
+            <StatCard title="Listed Equipment" value={ownerStats.totalListedEquipment} icon={Package} />
+            <StatCard title="Completed Rentals" value={ownerStats.completedRentals} icon={CheckCircle2} />
             <StatCard
               title="Total Earnings"
-              value={`৳${Number(stats.totalEarnings || 0).toLocaleString()}`}
+              value={`৳${Number(ownerStats.totalEarnings || 0).toLocaleString()}`}
               icon={Banknote}
             />
           </div>
@@ -160,7 +163,7 @@ export default function DashboardOverviewPage() {
             <h3 className="font-bold text-base mb-4">Monthly Earnings Overview (৳)</h3>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.monthlyStats}>
+                <BarChart data={ownerStats.monthlyStats}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
                   <XAxis dataKey="month" fontSize={12} />
                   <YAxis fontSize={12} />
@@ -209,7 +212,7 @@ function StatCard({
 }: {
   title: string;
   value: string | number;
-  icon: any;
+  icon: LucideIcon;
   highlight?: boolean;
 }) {
   return (

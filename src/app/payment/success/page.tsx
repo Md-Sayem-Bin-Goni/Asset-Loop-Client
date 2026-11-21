@@ -6,6 +6,8 @@ import Link from "next/link";
 import axiosSecure from "@/lib/axiosSecure";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { Booking } from "@/types";
+import { isAxiosError } from "axios";
 import { CheckCircle2, Loader2, ArrowRight, Receipt } from "lucide-react";
 
 function PaymentSuccessContent() {
@@ -14,7 +16,7 @@ function PaymentSuccessContent() {
   const bookingId = searchParams.get("booking_id");
 
   const [loading, setLoading] = useState(true);
-  const [booking, setBooking] = useState<any>(null);
+  const [booking, setBooking] = useState<Booking | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -33,8 +35,14 @@ function PaymentSuccessContent() {
         if (res.data?.success) {
           setBooking(res.data.booking);
         }
-      } catch (err: any) {
-        setError(err?.response?.data?.message || "Could not verify payment.");
+      } catch (err: unknown) {
+        let message = "Could not verify payment.";
+        if (isAxiosError(err)) {
+          message = err.response?.data?.message || err.message || message;
+        } else if (err instanceof Error) {
+          message = err.message;
+        }
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -98,10 +106,12 @@ function PaymentSuccessContent() {
               <span className="text-[var(--muted-foreground)]">Quantity:</span>
               <span className="font-semibold">{booking.requiredQuantity} unit(s)</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-[var(--muted-foreground)]">Transaction ID:</span>
-              <span className="font-mono text-[11px]">{booking.transactionId}</span>
-            </div>
+            {booking.transactionId && (
+              <div className="flex justify-between">
+                <span className="text-[var(--muted-foreground)]">Transaction ID:</span>
+                <span className="font-mono text-[11px]">{booking.transactionId}</span>
+              </div>
+            )}
             <div className="flex justify-between pt-2 border-t border-[var(--border)] text-sm font-bold">
               <span>Total Paid:</span>
               <span className="text-[#059669]">৳{booking.totalAmount?.toLocaleString()}</span>

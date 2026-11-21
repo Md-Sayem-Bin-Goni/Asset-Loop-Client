@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
+import { Booking } from "@/types";
 import { Loader2, CalendarCheck } from "lucide-react";
 
 export default function AdminAllRentalsPage() {
-  const [rentals, setRentals] = useState<any[]>([]);
+  const [rentals, setRentals] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function AdminAllRentalsPage() {
         if (res.data?.success) {
           setRentals(res.data.rentals);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Failed to fetch all rentals:", error);
       } finally {
         setLoading(false);

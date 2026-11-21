@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { useAuth } from "@/providers/AuthProvider";
+import { PlatformUser, UserRole } from "@/types";
+import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { Loader2, Users, Trash2, Shield } from "lucide-react";
 
 export default function AllUsersPage() {
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<PlatformUser[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
@@ -19,8 +21,14 @@ export default function AllUsersPage() {
       if (res.data?.success) {
         setUsers(res.data.users);
       }
-    } catch {
-      toast.error("Failed to fetch users.");
+    } catch (err: unknown) {
+      let message = "Failed to fetch users.";
+      if (isAxiosError(err)) {
+        message = err.response?.data?.message || err.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -35,12 +43,18 @@ export default function AllUsersPage() {
       const res = await axiosSecure.patch(`/users/${userId}/role`, { role: newRole });
       if (res.data?.success) {
         setUsers((prev) =>
-          prev.map((u) => (u._id === userId ? { ...u, role: newRole } : u))
+          prev.map((u) => (u._id === userId ? { ...u, role: newRole as UserRole } : u))
         );
         toast.success(`User role updated to ${newRole.toUpperCase()}`);
       }
-    } catch {
-      toast.error("Failed to update user role.");
+    } catch (err: unknown) {
+      let message = "Failed to update user role.";
+      if (isAxiosError(err)) {
+        message = err.response?.data?.message || err.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
     }
   };
 
@@ -52,8 +66,14 @@ export default function AllUsersPage() {
         setUsers((prev) => prev.filter((u) => u._id !== userId));
         toast.success("User deleted successfully.");
       }
-    } catch {
-      toast.error("Failed to delete user.");
+    } catch (err: unknown) {
+      let message = "Failed to delete user.";
+      if (isAxiosError(err)) {
+        message = err.response?.data?.message || err.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(message);
     }
   };
 
