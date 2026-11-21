@@ -5,6 +5,8 @@ import PrivateRoute from "@/components/shared/PrivateRoute";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { Menu, Layers } from "lucide-react";
 
+
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
