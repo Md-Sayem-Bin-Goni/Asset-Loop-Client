@@ -14,7 +14,7 @@ export default function EquipmentCard({ equipment }: { equipment: Equipment }) {
     : `/login?redirect=${encodeURIComponent(`/equipment/${equipment._id}`)}`;
 
   return (
-    <div className="h-full flex flex-col justify-between bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#059669]/60 dark:hover:border-[#10B981]/50 hover:-translate-y-1 transition-all duration-300 group">
+    <div className="h-full flex flex-col justify-between bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#059669]/60 dark:hover:border-[#10B981]/50 hover:-translate-y-1.5 transition-all duration-300 group">
       {/* Uniform Fixed Aspect Image & Badges */}
       <div>
         <div className="relative h-52 w-full overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
@@ -81,7 +81,7 @@ export default function EquipmentCard({ equipment }: { equipment: Equipment }) {
 
           <Link
             href={targetUrl}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold transition-all shadow-xs hover:shadow-md hover:shadow-emerald-600/25 shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] active:scale-[0.98] text-white text-xs font-bold transition-all shadow-xs hover:shadow-md hover:shadow-emerald-600/25 shrink-0 cursor-pointer"
           >
             View Details
             <ArrowRight className="h-3.5 w-3.5" />

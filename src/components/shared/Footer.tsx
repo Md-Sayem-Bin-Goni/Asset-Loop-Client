@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/shared/Logo";
 import {
   Layers,
   Mail,
@@ -55,14 +56,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
           {/* Brand Column (4 cols on lg) */}
           <div className="lg:col-span-4 space-y-5">
-            <Link href="/" className="inline-flex items-center gap-2.5 group">
-              <div className="p-2 rounded-xl bg-[#059669] group-hover:bg-[#047857] transition-colors shadow-lg shadow-emerald-950/20">
-                <Layers className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-2xl font-bold tracking-tight text-[#111827] dark:text-white">
-                Asset<span className="text-[#059669] dark:text-[#10B981]">Loop</span>
-              </span>
-            </Link>
+            <Logo size="lg" />
 
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-sm">
               Bangladesh&apos;s modern peer-to-peer &amp; commercial equipment rental marketplace. Rent verified machinery, cinema cameras, vehicles, and event gear on flexible terms.

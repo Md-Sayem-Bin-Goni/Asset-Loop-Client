@@ -60,7 +60,7 @@ export default function CustomerReviews() {
           {reviews.map((rev) => (
             <div
               key={rev.name}
-              className="p-6 rounded-2xl bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-xl hover:border-[#059669]/50 hover:-translate-y-1 transition-all duration-300"
+              className="p-6 rounded-2xl bg-white dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-xl hover:border-[#059669]/50 hover:-translate-y-1.5 transition-all duration-300"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">

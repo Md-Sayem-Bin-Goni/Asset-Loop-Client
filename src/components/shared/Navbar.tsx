@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Logo from "@/components/shared/Logo";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { signOut } from "@/lib/auth-client";
@@ -38,14 +39,7 @@ function NavbarContent() {
     <header className="sticky top-0 z-50 w-full bg-white/95 dark:bg-[#090D16] text-[#111827] dark:text-white border-b border-gray-200 dark:border-gray-800 backdrop-blur-md shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="p-2 rounded-lg bg-[#059669] group-hover:bg-[#047857] transition-colors">
-            <Layers className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-[#111827] dark:text-white">
-            Asset<span className="text-[#059669] dark:text-[#10B981]">Loop</span>
-          </span>
-        </Link>
+        <Logo size="md" />
 
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-5 lg:gap-7">

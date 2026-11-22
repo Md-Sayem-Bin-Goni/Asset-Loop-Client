@@ -1,7 +1,8 @@
 "use client";
 
 import { Booking } from "@/types";
-import { X, Printer, Layers, CheckCircle2, FileText } from "lucide-react";
+import Logo from "@/components/shared/Logo";
+import { X, Printer, CheckCircle2, FileText } from "lucide-react";
 
 interface InvoiceModalProps {
   isOpen: boolean;
@@ -86,13 +87,8 @@ export default function InvoiceModal({ isOpen, booking, onClose }: InvoiceModalP
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6 border-b border-gray-200 dark:border-gray-800">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="p-2 rounded-xl bg-[#059669] text-white">
-                  <Layers className="h-5 w-5" />
-                </div>
-                <span className="text-xl font-extrabold tracking-tight">
-                  Asset<span className="text-[#059669]">Loop</span>
-                </span>
+              <div className="mb-2">
+                <Logo size="md" clickable={false} />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 Heavy Equipment &amp; Machinery Rental Platform

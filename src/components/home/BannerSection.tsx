@@ -1,98 +1,120 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Sparkles, PlusCircle } from "lucide-react";
+import {
+  ArrowRight,
+  ShieldCheck,
+  PlusCircle,
+  CheckCircle2,
+  Zap,
+  MapPin,
+} from "lucide-react";
 
 export default function BannerSection() {
+  const trustFeatures = [
+    {
+      icon: ShieldCheck,
+      title: "500+ Verified Gear",
+      subtitle: "Inspected & authentic listings",
+    },
+    {
+      icon: Zap,
+      title: "Instant Stripe Payments",
+      subtitle: "Protected digital checkout",
+    },
+    {
+      icon: CheckCircle2,
+      title: "100% Insured Rentals",
+      subtitle: "Damage & transit protection",
+    },
+    {
+      icon: MapPin,
+      title: "All 64 Districts",
+      subtitle: "Nationwide coverage & pickup",
+    },
+  ];
+
   return (
-    <section className="relative overflow-hidden bg-slate-50/80 dark:bg-[#090D16] text-[#111827] dark:text-white py-16 sm:py-24 lg:py-28 border-b border-gray-200 dark:border-gray-800 transition-colors">
-      {/* Subtle Emerald Background Glows */}
-      <div className="pointer-events-none absolute -top-40 right-0 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-[#059669]/15 to-[#10B981]/10 blur-3xl dark:from-[#059669]/25 dark:to-[#10B981]/15" />
-      <div className="pointer-events-none absolute -bottom-40 left-0 h-[26rem] w-[26rem] rounded-full bg-gradient-to-tr from-[#10B981]/10 to-[#059669]/10 blur-3xl dark:from-[#10B981]/15 dark:to-transparent" />
+    <section className="relative overflow-hidden bg-slate-50/70 dark:bg-[#090D16] text-[#111827] dark:text-white py-20 sm:py-28 lg:py-32 border-b border-gray-200/90 dark:border-gray-800 transition-colors bg-hero-grid">
+      {/* Ambient Emerald & Mint Radial Glows */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[36rem] w-[44rem] rounded-full bg-gradient-to-br from-[#059669]/20 via-[#10B981]/15 to-transparent blur-3xl dark:from-[#059669]/25 dark:via-[#10B981]/15 animate-pulse-glow" />
+      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-[20rem] w-[36rem] rounded-full bg-gradient-to-t from-[#10B981]/10 via-[#059669]/5 to-transparent blur-3xl dark:from-[#10B981]/15 dark:to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Text Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-6"
-          >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#059669]/10 dark:bg-[#059669]/20 border border-[#059669]/25 dark:border-[#10B981]/30 text-[#059669] dark:text-[#10B981] text-xs font-semibold shadow-xs">
-              <Sparkles className="h-3.5 w-3.5 text-[#059669] dark:text-[#10B981]" />
-              Bangladesh&apos;s #1 Verified Equipment Rental Platform
-            </div>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="space-y-8"
+        >
+          {/* Trust Pill Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 dark:bg-gray-900/80 border border-[#059669]/30 dark:border-[#10B981]/30 shadow-xs backdrop-blur-md">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#059669]" />
+            </span>
+            <span className="text-xs sm:text-sm font-bold text-[#059669] dark:text-[#10B981] tracking-wide">
+              Bangladesh&apos;s #1 Equipment Rental Platform
+            </span>
+          </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-[#111827] dark:text-white">
-              Rent Pro-Grade Gear <br />
-              <span className="bg-gradient-to-r from-[#059669] via-[#047857] to-[#10B981] dark:from-[#10B981] dark:to-[#059669] bg-clip-text text-transparent">
-                Without Heavy Ownership
-              </span>
-            </h1>
+          {/* Clean High-Impact Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-[#111827] dark:text-white max-w-4xl mx-auto">
+            Rent Pro-Grade Equipment <br className="hidden sm:inline" />
+            <span className="bg-gradient-to-r from-[#059669] via-[#047857] to-[#10B981] dark:from-[#10B981] dark:via-[#34D399] dark:to-[#059669] bg-clip-text text-transparent">
+              Without Heavy Ownership
+            </span>
+          </h1>
 
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl leading-relaxed">
-              From heavy construction machinery in Dhaka to cinema cameras in Sylhet and agricultural tractors in Khulna—book verified equipment securely with flexible daily, weekly, or monthly plans.
-            </p>
+          {/* Clean Value Proposition Paragraph */}
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed font-normal">
+            Direct access to verified construction machinery, cinema camera rigs, agricultural tractors, and event sound systems across all 64 districts with flexible daily, weekly, and monthly rates.
+          </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link
-                href="/equipment"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-semibold text-sm shadow-md shadow-emerald-600/25 hover:shadow-lg hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all"
-              >
-                Explore All Equipment
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-gray-100 border border-gray-300 dark:bg-gray-800/90 dark:hover:bg-gray-700/90 dark:border-gray-700 text-[#111827] dark:text-white font-semibold text-sm transition-all shadow-xs hover:border-[#059669]/40 hover:-translate-y-0.5"
-              >
-                <PlusCircle className="h-4 w-4 text-[#059669] dark:text-[#10B981]" />
-                List Your Equipment
-              </Link>
-            </div>
+          {/* Centered Dual Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <Link
+              href="/equipment"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-[#059669] hover:bg-[#047857] text-white font-bold text-sm sm:text-base shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all cursor-pointer"
+            >
+              <span>Explore All Equipment</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white/90 hover:bg-white dark:bg-gray-900/80 dark:hover:bg-gray-800 border border-gray-300/90 dark:border-gray-700/80 text-[#111827] dark:text-white font-bold text-sm sm:text-base transition-all shadow-xs hover:border-[#059669]/60 hover:-translate-y-0.5 active:scale-[0.98] backdrop-blur-md cursor-pointer"
+            >
+              <PlusCircle className="h-4 w-4 text-[#059669] dark:text-[#10B981]" />
+              <span>List Your Equipment</span>
+            </Link>
+          </div>
 
-            <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-gray-500 dark:text-gray-400">
-              <span className="flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="h-4 w-4 text-[#059669] dark:text-[#10B981]" /> 100% Admin-Verified Listings
-              </span>
-              <span className="flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="h-4 w-4 text-[#059669] dark:text-[#10B981]" /> Instant Stripe Checkout
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Right Visual Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-5"
-          >
-            <div className="relative h-80 sm:h-96 w-full rounded-2xl overflow-hidden border border-gray-200/90 dark:border-gray-800 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 group">
-              <Image
-                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1000&q=80"
-                alt="Industrial and Commercial Equipment"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 500px"
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border border-gray-200/90 dark:border-gray-800 shadow-xl flex items-center justify-between z-10">
-                <div>
-                  <p className="text-xs text-[#059669] dark:text-[#10B981] font-bold">Nationwide Network</p>
-                  <p className="text-sm font-extrabold text-[#111827] dark:text-white">64 Districts Coverage Ready</p>
+          {/* Clean Trust Features Grid */}
+          <div className="pt-8 sm:pt-12 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
+            {trustFeatures.map((feat) => {
+              const Icon = feat.icon;
+              return (
+                <div
+                  key={feat.title}
+                  className="p-4 rounded-2xl bg-white/80 dark:bg-gray-900/60 border border-gray-200/90 dark:border-gray-800/80 shadow-xs hover:shadow-md hover:border-[#059669]/40 dark:hover:border-[#10B981]/30 hover:-translate-y-1 transition-all duration-300 backdrop-blur-sm text-left flex items-start gap-3 group"
+                >
+                  <div className="p-2 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 text-[#059669] dark:text-[#10B981] shrink-0 group-hover:bg-[#059669] group-hover:text-white transition-colors">
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-xs sm:text-sm font-extrabold text-[#111827] dark:text-white truncate">
+                      {feat.title}
+                    </p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">
+                      {feat.subtitle}
+                    </p>
+                  </div>
                 </div>
-                <span className="px-3 py-1 rounded-lg bg-[#059669] text-white text-xs font-bold shadow-xs">
-                  Active 24/7
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

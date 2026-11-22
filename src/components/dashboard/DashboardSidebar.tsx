@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Logo from "@/components/shared/Logo";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { signOut } from "@/lib/auth-client";
@@ -75,14 +76,7 @@ export default function DashboardSidebar({ mobileOpen, setMobileOpen }: SidebarP
     <div className="flex flex-col h-full bg-white/95 dark:bg-[#090D16] text-[#111827] dark:text-gray-200 border-r border-gray-200/90 dark:border-gray-800 transition-colors">
       {/* Brand Header */}
       <div className="h-16 px-6 flex items-center justify-between border-b border-gray-200/90 dark:border-gray-800">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#059669] shadow-xs">
-            <Layers className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-xl font-extrabold text-[#111827] dark:text-white">
-            Asset<span className="text-[#059669] dark:text-[#10B981]">Loop</span>
-          </span>
-        </Link>
+        <Logo size="md" />
         <button
           onClick={() => setMobileOpen(false)}
           className="lg:hidden p-1.5 rounded-lg text-gray-500 hover:text-[#111827] dark:text-gray-400 dark:hover:text-white"

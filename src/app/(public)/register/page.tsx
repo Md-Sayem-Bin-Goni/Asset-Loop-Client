@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { signUp, signIn } from "@/lib/auth-client";
 import { uploadImageToImgBB } from "@/lib/uploadImage";
 import { useAuth } from "@/providers/AuthProvider";
+import Logo from "@/components/shared/Logo";
 import { toast } from "sonner";
 import {
   Layers,
@@ -130,8 +131,8 @@ export default function RegisterPage() {
       <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-xl p-8 space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-[#059669] to-[#047857] text-white shadow-md shadow-emerald-600/20 mb-1">
-            <Layers className="h-6 w-6" />
+          <div className="flex justify-center mb-1">
+            <Logo size="lg" variant="iconOnly" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Create Your Account</h1>
           <p className="text-sm text-[var(--muted-foreground)]">
