@@ -14,6 +14,10 @@ export default function MyEquipmentPage() {
   const [editingItem, setEditingItem] = useState<Equipment | null>(null);
   const [updating, setUpdating] = useState(false);
 
+  // Deletion Modal State
+  const [deletingItem, setDeletingItem] = useState<Equipment | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const fetchMyEquipments = async () => {
     try {
       setLoading(true);
@@ -32,16 +36,20 @@ export default function MyEquipmentPage() {
     fetchMyEquipments();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this equipment?")) return;
+  const handleConfirmDelete = async () => {
+    if (!deletingItem) return;
     try {
-      const res = await axiosSecure.delete(`/equipments/${id}`);
+      setIsDeleting(true);
+      const res = await axiosSecure.delete(`/equipments/${deletingItem._id}`);
       if (res.data?.success) {
-        setEquipments((prev) => prev.filter((item) => item._id !== id));
+        setEquipments((prev) => prev.filter((item) => item._id !== deletingItem._id));
         toast.success("Equipment deleted successfully");
+        setDeletingItem(null);
       }
     } catch {
       toast.error("Failed to delete equipment");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -158,7 +166,7 @@ export default function MyEquipmentPage() {
                           <Edit className="h-3.5 w-3.5" /> Edit
                         </button>
                         <button
-                          onClick={() => handleDelete(item._id)}
+                          onClick={() => setDeletingItem(item)}
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 text-xs font-bold cursor-pointer transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" /> Delete
@@ -240,6 +248,45 @@ export default function MyEquipmentPage() {
                   {updating ? "Updating..." : "Save Changes"}
                 </button>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deletingItem && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+            <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 space-y-4 shadow-2xl">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                  <Trash2 className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="font-extrabold text-lg text-[var(--foreground)]">Delete Equipment</h2>
+                  <p className="text-xs text-[var(--muted-foreground)]">Permanent listing removal</p>
+                </div>
+              </div>
+              <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+                Are you sure you want to permanently delete <strong className="text-[var(--foreground)]">{deletingItem.name}</strong>? This action cannot be undone.
+              </p>
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--border)]">
+                <button
+                  type="button"
+                  onClick={() => setDeletingItem(null)}
+                  disabled={isDeleting}
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-xs font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:opacity-60 text-white text-xs font-bold transition-all shadow-md shadow-rose-600/20 cursor-pointer"
+                >
+                  {isDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                  {isDeleting ? "Deleting..." : "Delete Equipment"}
+                </button>
+              </div>
             </div>
           </div>
         )}

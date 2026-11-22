@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Booking } from "@/types";
-import { Loader2, CalendarCheck, ChevronLeft, ChevronRight, CheckCircle2, Clock } from "lucide-react";
+import InvoiceModal from "@/components/shared/InvoiceModal";
+import { Loader2, CalendarCheck, ChevronLeft, ChevronRight, CheckCircle2, Clock, FileText } from "lucide-react";
 
 export default function MyRentalsPage() {
   const [rentals, setRentals] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [page, setPage] = useState(1);
   const perPage = 8;
 
@@ -69,6 +71,7 @@ export default function MyRentalsPage() {
                     <th className="py-4 px-5">Total Amount</th>
                     <th className="py-4 px-5">Payment Status</th>
                     <th className="py-4 px-5">Booking Status</th>
+                    <th className="py-4 px-5 text-right">Invoice</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200/70 dark:divide-gray-800/80">
@@ -99,6 +102,20 @@ export default function MyRentalsPage() {
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/15 text-blue-700 dark:text-blue-400">
                           {item.bookingStatus}
                         </span>
+                      </td>
+                      <td className="py-4 px-5 text-right whitespace-nowrap">
+                        {item.paymentStatus === "Paid" ? (
+                          <button
+                            onClick={() => setSelectedBooking(item)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-[#059669] hover:text-white text-[#059669] dark:text-[#10B981] text-xs font-bold transition-all cursor-pointer shadow-xs"
+                            title="View / Download Invoice"
+                          >
+                            <FileText className="h-3.5 w-3.5" />
+                            Invoice
+                          </button>
+                        ) : (
+                          <span className="text-xs text-[var(--muted-foreground)] italic">—</span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -131,6 +148,13 @@ export default function MyRentalsPage() {
             )}
           </div>
         )}
+
+        {/* Invoice Modal Component */}
+        <InvoiceModal
+          isOpen={!!selectedBooking}
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+        />
       </div>
     </PrivateRoute>
   );

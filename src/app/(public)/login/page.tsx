@@ -34,6 +34,9 @@ function LoginForm() {
       }
 
       await refetchUser();
+      setEmail("");
+      setPassword("");
+      setShowPassword(false);
       toast.success("Logged in successfully! Welcome back.");
       router.push(redirectPath);
     } catch {

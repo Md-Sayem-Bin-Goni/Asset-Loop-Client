@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import { Equipment } from "@/types";
 import EquipmentCard from "@/components/shared/EquipmentCard";
-import { Search, SlidersHorizontal, RotateCcw, ChevronLeft, ChevronRight, PackageX, Sparkles } from "lucide-react";
+import { Search, SlidersHorizontal, RotateCcw, ChevronLeft, ChevronRight, PackageX, Sparkles, Loader2 } from "lucide-react";
 
 const CATEGORIES = [
   "All",
@@ -22,7 +22,8 @@ function AllEquipmentContent() {
   const initialCategory = searchParams.get("category") || "All";
 
   const [equipments, setEquipments] = useState<Equipment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
   // Filter & Search States
   const [search, setSearch] = useState("");
@@ -33,26 +34,48 @@ function AllEquipmentContent() {
   const [availability, setAvailability] = useState("all");
   const [sort, setSort] = useState("recent");
 
+  // Debounced search and price states
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState(minPrice);
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState(maxPrice);
+
   // Pagination States
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
+  // Debounce search and price filter inputs to prevent redundant requests
   useEffect(() => {
-    setCategory(searchParams.get("category") || "All");
-    setPage(1);
-  }, [searchParams]);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setDebouncedMinPrice(minPrice);
+      setDebouncedMaxPrice(maxPrice);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [search, minPrice, maxPrice]);
 
+  // Sync category if URL search param changes
+  const paramCategory = searchParams.get("category");
   useEffect(() => {
+    if (paramCategory && paramCategory !== category) {
+      setCategory(paramCategory);
+      setPage(1);
+    }
+  }, [paramCategory]);
+
+  // Main data fetching effect with request cancellation
+  useEffect(() => {
+    let isCancelled = false;
+
     const fetchEquipments = async () => {
       try {
-        setLoading(true);
+        setIsFetching(true);
         const params = new URLSearchParams({
-          search,
+          search: debouncedSearch.trim(),
           category,
           rentalType,
-          minPrice,
-          maxPrice,
+          minPrice: debouncedMinPrice,
+          maxPrice: debouncedMaxPrice,
           availability,
           sort,
           page: page.toString(),
@@ -63,21 +86,29 @@ function AllEquipmentContent() {
           `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/equipments?${params.toString()}`
         );
 
-        if (res.data?.success) {
-          setEquipments(res.data.equipments);
+        if (!isCancelled && res.data?.success) {
+          setEquipments(res.data.equipments || []);
           setTotalPages(res.data.totalPages || 1);
           setTotalItems(res.data.total || 0);
         }
       } catch (error) {
-        console.error("Failed to fetch equipments:", error);
+        if (!isCancelled) {
+          console.error("Failed to fetch equipments:", error);
+        }
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setIsFetching(false);
+          setIsInitialLoading(false);
+        }
       }
     };
 
-    const debounce = setTimeout(fetchEquipments, 300);
-    return () => clearTimeout(debounce);
-  }, [search, category, rentalType, minPrice, maxPrice, availability, sort, page]);
+    fetchEquipments();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [debouncedSearch, category, rentalType, debouncedMinPrice, debouncedMaxPrice, availability, sort, page]);
 
   const handleReset = () => {
     setSearch("");
@@ -235,8 +266,15 @@ function AllEquipmentContent() {
         </div>
       </div>
 
-      {/* 3-Column Equipment Grid */}
-      {loading ? (
+      {/* Subtle Top Loading Indicator Bar */}
+      <div className="h-1 -mt-6 mb-6 overflow-hidden rounded-full bg-transparent">
+        {isFetching && (
+          <div className="h-full bg-gradient-to-r from-emerald-500 via-[#10B981] to-emerald-600 animate-pulse" />
+        )}
+      </div>
+
+      {/* Equipment Grid */}
+      {isInitialLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
             <div
@@ -254,7 +292,11 @@ function AllEquipmentContent() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch transition-opacity duration-200 ${
+            isFetching ? "opacity-60 pointer-events-none" : "opacity-100"
+          }`}
+        >
           {equipments.map((item) => (
             <EquipmentCard key={item._id} equipment={item} />
           ))}

@@ -3,18 +3,21 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import axios from "axios";
+import axiosSecure from "@/lib/axiosSecure";
 import { UserProfile } from "@/types";
 
 interface AuthContextType {
   user: UserProfile | null;
   isLoading: boolean;
   refetchUser: () => Promise<void>;
+  updateUser: (updatedUser: Partial<UserProfile>) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   refetchUser: async () => {},
+  updateUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -32,6 +35,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     try {
       setIsSyncing(true);
+      const token = localStorage.getItem("assetloop-token");
+      if (token) {
+        try {
+          const profileRes = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/auth/me`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          if (profileRes.data?.success && profileRes.data?.user) {
+            setUser(profileRes.data.user);
+            setIsSyncing(false);
+            return;
+          }
+        } catch {
+          // Token expired or invalid, continue to refresh via /auth/jwt
+        }
+      }
+
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/auth/jwt`,
         {
@@ -52,6 +72,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const refetchUser = async () => {
+    try {
+      const res = await axiosSecure.get("/auth/me");
+      if (res.data?.success && res.data?.user) {
+        setUser(res.data.user);
+        return;
+      }
+    } catch {
+      // Fallback to syncUserWithBackend
+    }
+    await syncUserWithBackend();
+  };
+
+  const updateUser = (updatedUser: Partial<UserProfile>) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedUser } : (updatedUser as UserProfile)));
+  };
+
   useEffect(() => {
     if (!isPending) {
       syncUserWithBackend();
@@ -61,7 +98,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isLoading = isPending || isSyncing;
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, refetchUser: syncUserWithBackend }}>
+    <AuthContext.Provider value={{ user, isLoading, refetchUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

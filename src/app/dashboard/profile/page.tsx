@@ -5,10 +5,10 @@ import { useAuth } from "@/providers/AuthProvider";
 import axiosSecure from "@/lib/axiosSecure";
 import { uploadImageToImgBB } from "@/lib/uploadImage";
 import { toast } from "sonner";
-import { UserCircle, Mail, Phone, MapPin, Save, Loader2, Upload } from "lucide-react";
+import { UserCircle, Mail, Phone, MapPin, Save, Loader2, Upload, Sparkles } from "lucide-react";
 
 export default function ProfilePage() {
-  const { user, refetchUser } = useAuth();
+  const { user, refetchUser, updateUser } = useAuth();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -33,32 +33,52 @@ export default function ProfilePage() {
       let finalImage = imageUrl;
 
       if (imageFile) {
+        toast.info("Uploading profile photo to ImgBB...");
         finalImage = await uploadImageToImgBB(imageFile);
+        setImageUrl(finalImage);
       }
 
-      const res = await axiosSecure.put("/users/profile", {
-        name,
-        phone,
-        address,
+      const payload = {
+        name: name.trim(),
+        phone: phone.trim(),
+        address: address.trim(),
         image: finalImage,
-      });
+      };
+
+      const res = await axiosSecure.patch("/users/profile", payload);
 
       if (res.data?.success) {
+        // Immediate local state sync in AuthProvider for instant UI responsiveness
+        if (res.data.user) {
+          updateUser(res.data.user);
+        } else {
+          updateUser(payload);
+        }
         await refetchUser();
         setImageFile(null);
-        toast.success("Profile updated successfully!");
+        toast.success("Profile updated successfully");
       }
-    } catch (error: any) {
-      toast.error(error?.message || "Failed to update profile.");
+    } catch (error: unknown) {
+      const msg =
+        error && typeof error === "object" && "response" in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+          : "Failed to update profile.";
+      toast.error(msg || "Failed to update profile.");
     } finally {
       setSaving(false);
     }
   };
 
+  const previewAvatarSrc = imageFile
+    ? URL.createObjectURL(imageFile)
+    : imageUrl ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "User")}&background=059669&color=fff`;
+
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#059669]/10 text-[#059669] dark:bg-[#059669]/20 dark:text-[#10B981]">
+          <Sparkles className="h-3 w-3" />
           Account Settings
         </span>
         <h1 className="text-2xl font-extrabold tracking-tight mt-1">My Profile</h1>
@@ -68,18 +88,14 @@ export default function ProfilePage() {
         {/* Avatar Header */}
         <div className="flex items-center gap-4 pb-6 border-b border-[var(--border)]">
           <img
-            src={
-              imageFile
-                ? URL.createObjectURL(imageFile)
-                : imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "U")}&background=059669&color=fff`
-            }
-            alt={name}
-            className="h-20 w-20 rounded-full object-cover border-2 border-[#059669]"
+            src={previewAvatarSrc}
+            alt={name || "User"}
+            className="h-20 w-20 rounded-full object-cover border-2 border-[#059669] shadow-xs"
           />
           <div>
             <h2 className="text-lg font-bold">{user?.name}</h2>
             <p className="text-xs text-[var(--muted-foreground)]">{user?.email}</p>
-            <span className="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase bg-[#059669]/15 text-[#059669]">
+            <span className="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#059669]/15 text-[#059669] dark:text-[#10B981]">
               Role: {user?.role}
             </span>
           </div>
@@ -88,7 +104,7 @@ export default function ProfilePage() {
         <form onSubmit={handleUpdate} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5 text-[var(--foreground)]">
                 <UserCircle className="h-3.5 w-3.5 text-[#059669]" /> Full Name
               </label>
               <input
@@ -96,12 +112,13 @@ export default function ProfilePage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                placeholder="Your full name"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5 text-[var(--foreground)]">
                 <Mail className="h-3.5 w-3.5 text-[#059669]" /> Email (Read-Only)
               </label>
               <input
@@ -115,7 +132,7 @@ export default function ProfilePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5 text-[var(--foreground)]">
                 <Phone className="h-3.5 w-3.5 text-[#059669]" /> Phone Number
               </label>
               <input
@@ -123,25 +140,25 @@ export default function ProfilePage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+880 17XX-XXXXXX"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5">
-                <Upload className="h-3.5 w-3.5 text-[#059669]" /> Update Photo (ImgBB)
+              <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5 text-[var(--foreground)]">
+                <Upload className="h-3.5 w-3.5 text-[#059669]" /> Profile Photo (ImgBB)
               </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                className="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#059669]/15 file:text-[#059669] border border-[var(--border)] rounded-xl p-1.5 cursor-pointer"
+                className="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#059669]/15 file:text-[#059669] dark:file:text-[#10B981] border border-[var(--border)] rounded-xl p-1.5 cursor-pointer"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-semibold mb-1.5 flex items-center gap-1.5 text-[var(--foreground)]">
               <MapPin className="h-3.5 w-3.5 text-[#059669]" /> Address
             </label>
             <input
@@ -149,14 +166,14 @@ export default function ProfilePage() {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="House, Road, Area, District (e.g. Dhanmondi, Dhaka)"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-transparent text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[#059669]"
             />
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] disabled:opacity-60 text-white font-semibold text-sm transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] disabled:opacity-60 text-white font-semibold text-sm transition-colors cursor-pointer shadow-md shadow-emerald-600/20"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? "Saving Changes..." : "Save Profile Changes"}

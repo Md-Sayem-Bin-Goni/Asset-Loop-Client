@@ -93,10 +93,19 @@ export default function RegisterPage() {
       }
 
       await refetchUser();
+      setName("");
+      setEmail("");
+      setPassword("");
+      setShowPassword(false);
+      setImageFile(null);
+      setImagePreview("");
+      setImageUrl("");
+      setPhotoMode("upload");
       toast.success("Account created successfully! Welcome to AssetLoop.");
       router.push("/");
-    } catch (err: any) {
-      toast.error(err?.message || "Something went wrong during registration.");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Something went wrong during registration.";
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

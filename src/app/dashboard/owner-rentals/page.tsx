@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import axiosSecure from "@/lib/axiosSecure";
 import PrivateRoute from "@/components/shared/PrivateRoute";
 import { Booking } from "@/types";
-import { Loader2, CalendarCheck, CheckCircle2, Clock } from "lucide-react";
+import { exportBookingsToCsv } from "@/lib/exportCsv";
+import { toast } from "sonner";
+import { Loader2, CalendarCheck, CheckCircle2, Clock, Download } from "lucide-react";
 
 export default function OwnerRentalsPage() {
   const [rentals, setRentals] = useState<Booking[]>([]);
@@ -27,14 +29,36 @@ export default function OwnerRentalsPage() {
     fetchOwnerRentals();
   }, []);
 
+  const handleExportCsv = () => {
+    if (rentals.length === 0) {
+      toast.error("No rental records to export.");
+      return;
+    }
+    const success = exportBookingsToCsv(rentals, "assetloop-rental-requests.csv");
+    if (success) {
+      toast.success("CSV report exported successfully!");
+    }
+  };
+
   return (
     <PrivateRoute allowedRoles={["owner"]}>
       <div className="space-y-6">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
-            Customer Orders
-          </span>
-          <h1 className="text-2xl font-extrabold tracking-tight mt-1">My Equipment Rental</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#059669]">
+              Customer Orders
+            </span>
+            <h1 className="text-2xl font-extrabold tracking-tight mt-1">Rental Requests</h1>
+          </div>
+          {rentals.length > 0 && (
+            <button
+              onClick={handleExportCsv}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#059669] text-[#059669] dark:text-[#10B981] hover:bg-[#059669] hover:text-white dark:hover:bg-[#059669] dark:hover:text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            >
+              <Download className="h-4 w-4" />
+              Export CSV
+            </button>
+          )}
         </div>
 
         {loading ? (

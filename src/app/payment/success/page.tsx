@@ -6,9 +6,10 @@ import Link from "next/link";
 import axiosSecure from "@/lib/axiosSecure";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import InvoiceModal from "@/components/shared/InvoiceModal";
 import { Booking } from "@/types";
 import { isAxiosError } from "axios";
-import { CheckCircle2, Loader2, ArrowRight, Receipt } from "lucide-react";
+import { CheckCircle2, Loader2, ArrowRight, Receipt, FileText } from "lucide-react";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -17,6 +18,7 @@ function PaymentSuccessContent() {
 
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState<Booking | null>(null);
+  const [showInvoice, setShowInvoice] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -92,7 +94,7 @@ function PaymentSuccessContent() {
         {booking && (
           <div className="p-4 rounded-2xl bg-[var(--secondary)]/60 border border-[var(--border)] text-left text-xs space-y-2.5">
             <div className="flex items-center gap-1.5 font-bold text-sm text-[#059669] pb-1 border-b border-[var(--border)]">
-              <Receipt className="h-4 w-4" /> Booking Receipt
+              <Receipt className="h-4 w-4" /> Booking Summary
             </div>
             <div className="flex justify-between">
               <span className="text-[var(--muted-foreground)]">Equipment:</span>
@@ -119,13 +121,32 @@ function PaymentSuccessContent() {
           </div>
         )}
 
-        <Link
-          href="/dashboard"
-          className="w-full py-3 px-5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors"
-        >
-          View My Rentals in Dashboard <ArrowRight className="h-4 w-4" />
-        </Link>
+        <div className="flex flex-col gap-3">
+          {booking && (
+            <button
+              onClick={() => setShowInvoice(true)}
+              className="w-full py-3 px-5 rounded-xl border border-[#059669] text-[#059669] dark:text-[#10B981] hover:bg-[#059669] hover:text-white dark:hover:bg-[#059669] dark:hover:text-white font-bold text-sm inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+            >
+              <FileText className="h-4 w-4" />
+              View / Download Invoice
+            </button>
+          )}
+
+          <Link
+            href="/dashboard/my-rentals"
+            className="w-full py-3 px-5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors shadow-md shadow-emerald-600/20"
+          >
+            View My Rentals in Dashboard <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
+
+      {/* Invoice Modal */}
+      <InvoiceModal
+        isOpen={showInvoice}
+        booking={booking}
+        onClose={() => setShowInvoice(false)}
+      />
     </div>
   );
 }
